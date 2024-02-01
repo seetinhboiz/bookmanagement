@@ -1,7 +1,6 @@
 package com.ttn.fictionManagement.service;
 
 import com.ttn.fictionManagement.dto.TagDTO;
-import com.ttn.fictionManagement.entity.Tag;
 
 import java.util.List;
 import java.util.Optional;

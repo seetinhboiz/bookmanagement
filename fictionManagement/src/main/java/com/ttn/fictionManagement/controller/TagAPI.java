@@ -1,9 +1,7 @@
 package com.ttn.fictionManagement.controller;
 
 import com.ttn.fictionManagement.dto.TagDTO;
-import com.ttn.fictionManagement.entity.Tag;
 import com.ttn.fictionManagement.service.TagService;
-import com.ttn.fictionManagement.serviceImplement.TagServiceImplement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
