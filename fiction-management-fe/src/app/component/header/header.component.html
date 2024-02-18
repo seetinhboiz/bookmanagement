@@ -1,5 +1,5 @@
 <nav class="navbar navbar-light bg-light">
-  <div class="container-fluid">
+  <div class="nav-left">
     <a class="navbar-brand" href="#">
       <img
         src="https://shorturl.at/jCFIX"
@@ -9,21 +9,23 @@
         loading="lazy"
       />
     </a>
+    <div class="wrapper-navbar-item">
+      <span class="navbar-item">Khám phá</span>
+      <span class="navbar-item">Cộng đồng</span>
+      <span class="navbar-item" routerLink="/admin">ADMIN</span>
+    </div>
   </div>
-  <div class="wrapper-navbar-item">
-    <span class="navbar-item">Khám phá</span>
-    <span class="navbar-item">Cộng đồng</span>
-    <form>
-      <input
-        type="search"
-        type="search"
-        placeholder="Tìm kiếm"
-        class="search-input"
-      />
-      <span class="input-group-text border-0" id="search-addon">
-        <i class="fas fa-search"></i>
-      </span>
-    </form>
+
+  <div class="user-info">
+    <img src="https://shorturl.at/uyLNR" alt="avatar" class="avatar" />
+    <span class="user-name"
+      ><span>UserUserUser</span
+      ><mat-icon
+        aria-hidden="false"
+        aria-label="Example home icon"
+        fontIcon="expand_more"
+      ></mat-icon
+    ></span>
   </div>
 </nav>
 <hr class="devider" />

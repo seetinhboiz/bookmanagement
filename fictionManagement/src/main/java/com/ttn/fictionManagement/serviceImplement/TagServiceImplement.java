@@ -6,6 +6,7 @@ import com.ttn.fictionManagement.repository.TagRepository;
 import com.ttn.fictionManagement.service.TagService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class TagServiceImplement implements TagService {
 
     @Override
     public List<TagDTO> findAll() {
-        List<Tag> tags = tagRepository.findAll();
+        List<Tag> tags = tagRepository.findAll(Sort.by(Sort.Direction.ASC, ("name")));
         return tags.stream().map(tag -> modelMapper.map(tag, TagDTO.class)).collect(Collectors.toList());
     }
 
@@ -38,6 +39,7 @@ public class TagServiceImplement implements TagService {
     @Override
     public TagDTO createOrUpdate(TagDTO tagDTO) {
         Tag tag = modelMapper.map(tagDTO, Tag.class);
+        tagRepository.save(tag);
         return tagDTO;
     }
 

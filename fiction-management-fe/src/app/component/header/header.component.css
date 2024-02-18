@@ -1,35 +1,65 @@
 .navbar {
+  display: flex;
+  height: 56px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-left {
     display: flex;
-    height: 56px;
-    align-items: center;
+
 }
 
 .logo {
-    margin-top: 6px;
-    width: 150px;
-    height: auto;
+  margin-top: 6px;
+  width: 150px;
+  height: auto;
 }
 
 .wrapper-navbar-item {
-    margin-left: 10px;
-    display: flex;
-    align-items: center;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .navbar-item {
-    margin-right: 40px;
-    font-weight: 560;
+  margin-right: 40px;
+  font-weight: 560;
 }
 
-.search-input {
-    width: 200px;
-    height: 30px;
-    border: none;
-    outline: none;
+.navbar-item:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.user-info {
+    display: flex;
+    margin-right: 50px;
+    align-items: center;
+    
+}
+
+.user-info:hover { 
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.user-name {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
     font-weight: 560;
 }
 
 .devider {
-    margin-bottom: 10px;
-    opacity: 0.2;
+  margin-bottom: 10px;
+  opacity: 0.2;
 }
