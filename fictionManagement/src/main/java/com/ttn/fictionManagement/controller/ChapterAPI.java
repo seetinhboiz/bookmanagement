@@ -1,7 +1,7 @@
 package com.ttn.fictionManagement.controller;
 
-import com.ttn.fictionManagement.dto.UserDTO;
-import com.ttn.fictionManagement.service.UserService;
+import com.ttn.fictionManagement.dto.ChapterDTO;
+import com.ttn.fictionManagement.service.ChapterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,22 +13,22 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/chapters")
 @CrossOrigin
-public class UserAPI {
+public class ChapterAPI {
 
-    private final UserService userService;
-    private final Logger logger = LoggerFactory.getLogger(UserAPI.class);
+    private final ChapterService chapterService;
+    private final Logger logger = LoggerFactory.getLogger(ChapterAPI.class);
 
     @Autowired
-    public UserAPI(UserService userService) {
-        this.userService = userService;
+    public ChapterAPI(ChapterService chapterService) {
+        this.chapterService = chapterService;
     }
 
     @GetMapping("")
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
+    public ResponseEntity<List<ChapterDTO>> getAllChapters() {
         try {
-            return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
+            return new ResponseEntity<>(chapterService.findAll(), HttpStatus.OK);
         } catch (Exception e) {
             loggerException("getting", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -36,9 +36,9 @@ public class UserAPI {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<UserDTO>> getById(@PathVariable long id) {
+    public ResponseEntity<Optional<ChapterDTO>> getById(@PathVariable long id) {
         try {
-            return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
+            return new ResponseEntity<>(chapterService.findById(id), HttpStatus.OK);
         } catch (Exception e) {
             loggerException("getting", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -46,10 +46,10 @@ public class UserAPI {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user) {
+    public ResponseEntity<ChapterDTO> createChapter(@RequestBody ChapterDTO chapter) {
         try {
-            userService.createOrUpdate(user);
-            return new ResponseEntity<>(user, HttpStatus.CREATED);
+            chapterService.createOrUpdate(chapter);
+            return new ResponseEntity<>(chapter, HttpStatus.CREATED);
         } catch (Exception e) {
             loggerException("creating", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -57,13 +57,14 @@ public class UserAPI {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO user, @PathVariable long id) {
+    public ResponseEntity<ChapterDTO> updateChapter(@RequestBody ChapterDTO chapter, @PathVariable long id) {
         try {
-            if (userService.findById(id).isPresent()) {
-                userService.createOrUpdate(user);
-                return new ResponseEntity<>(user, HttpStatus.OK);
+            Optional<ChapterDTO> chapterById = chapterService.findById(id);
+            if (chapterById.isPresent()) {
+                chapterService.createOrUpdate(chapter);
+                return new ResponseEntity<>(chapter, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
             loggerException("updating", e);
@@ -72,11 +73,11 @@ public class UserAPI {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable long id) {
+    public ResponseEntity<ChapterDTO> deleteChapter(@PathVariable long id) {
         try {
-            Optional<UserDTO> user = userService.findById(id);
-            if (user.isPresent()) {
-                userService.deleteUser(id);
+            Optional<ChapterDTO> chapterById = chapterService.findById(id);
+            if (chapterById.isPresent()) {
+                chapterService.deleteChapter(id);
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -88,6 +89,6 @@ public class UserAPI {
     }
 
     public void loggerException(String action, Exception e) {
-        logger.error("Error occurred while " + action + " user", e);
+        logger.error("Error occurred while " + action + " chapter", e);
     }
 }

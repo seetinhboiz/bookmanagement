@@ -1,7 +1,7 @@
 package com.ttn.fictionManagement.controller;
 
-import com.ttn.fictionManagement.dto.UserDTO;
-import com.ttn.fictionManagement.service.UserService;
+import com.ttn.fictionManagement.dto.FictionDTO;
+import com.ttn.fictionManagement.service.FictionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,22 +13,21 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/fictions")
 @CrossOrigin
-public class UserAPI {
-
-    private final UserService userService;
-    private final Logger logger = LoggerFactory.getLogger(UserAPI.class);
+public class FictionAPI {
+    private final FictionService fictionService;
+    private final Logger logger = LoggerFactory.getLogger(FictionAPI.class);
 
     @Autowired
-    public UserAPI(UserService userService) {
-        this.userService = userService;
+    public FictionAPI(FictionService fictionService) {
+        this.fictionService = fictionService;
     }
 
     @GetMapping("")
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
+    public ResponseEntity<List<FictionDTO>> getAllFictions() {
         try {
-            return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
+            return new ResponseEntity<>(fictionService.findAll(), HttpStatus.OK);
         } catch (Exception e) {
             loggerException("getting", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -36,9 +35,9 @@ public class UserAPI {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<UserDTO>> getById(@PathVariable long id) {
+    public ResponseEntity<Optional<FictionDTO>> getById(@PathVariable long id) {
         try {
-            return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
+            return new ResponseEntity<>(fictionService.findById(id), HttpStatus.OK);
         } catch (Exception e) {
             loggerException("getting", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -46,24 +45,25 @@ public class UserAPI {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user) {
+    public ResponseEntity<FictionDTO> createFiction(@RequestBody FictionDTO fiction) {
         try {
-            userService.createOrUpdate(user);
-            return new ResponseEntity<>(user, HttpStatus.CREATED);
+            fictionService.createOrUpdate(fiction);
+            return new ResponseEntity<>(fiction, HttpStatus.CREATED);
         } catch (Exception e) {
             loggerException("creating", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO user, @PathVariable long id) {
+     @PutMapping("/update/{id}")
+    public ResponseEntity<FictionDTO> updateFiction(@RequestBody FictionDTO fiction, @PathVariable long id) {
         try {
-            if (userService.findById(id).isPresent()) {
-                userService.createOrUpdate(user);
-                return new ResponseEntity<>(user, HttpStatus.OK);
+            Optional<FictionDTO> fictionById = fictionService.findById(id);
+            if (fictionById.isPresent()) {
+                fictionService.createOrUpdate(fiction);
+                return new ResponseEntity<>(fiction, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
             loggerException("updating", e);
@@ -72,11 +72,11 @@ public class UserAPI {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable long id) {
+    public ResponseEntity<FictionDTO> deleteFiction(@PathVariable long id) {
         try {
-            Optional<UserDTO> user = userService.findById(id);
-            if (user.isPresent()) {
-                userService.deleteUser(id);
+            Optional<FictionDTO> fictionById = fictionService.findById(id);
+            if (fictionById.isPresent()) {
+                fictionService.deleteFiction(id);
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -88,6 +88,6 @@ public class UserAPI {
     }
 
     public void loggerException(String action, Exception e) {
-        logger.error("Error occurred while " + action + " user", e);
+        logger.error("Error occurred while " + action + " fiction", e);
     }
 }

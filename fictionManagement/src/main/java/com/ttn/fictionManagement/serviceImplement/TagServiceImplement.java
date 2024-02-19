@@ -38,8 +38,7 @@ public class TagServiceImplement implements TagService {
 
     @Override
     public TagDTO createOrUpdate(TagDTO tagDTO) {
-        Tag tag = modelMapper.map(tagDTO, Tag.class);
-        tagRepository.save(tag);
+        tagRepository.save(modelMapper.map(tagDTO, Tag.class));
         return tagDTO;
     }
 
