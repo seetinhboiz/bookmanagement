@@ -55,7 +55,7 @@ export class AdminTagFeatureComponent implements OnInit {
   }
 
   openDialog(tag?: Tag) {
-    this.dialog.open(DialogContentExampleDialog, {
+    this.dialog.open(TagDialog, {
       minWidth: '400px',
       data: { tags: this.dataTags, tag: tag },
     });
@@ -85,10 +85,10 @@ export class AdminTagFeatureComponent implements OnInit {
     MatAutocompleteModule,
     AsyncPipe,
     MatInputModule,
-    CommonModule
+    CommonModule,
   ],
 })
-export class DialogContentExampleDialog implements OnInit {
+export class TagDialog implements OnInit {
   dialogTitle = 'Create Tag';
   name = new FormControl<string | Tag>('');
 
@@ -114,7 +114,7 @@ export class DialogContentExampleDialog implements OnInit {
 
   createTag(tag: Tag) {
     if (tag.name.trim().length > 0) {
-      this.tagService.createtag(tag).subscribe();
+      this.tagService.createTag(tag).subscribe();
     }
   }
 

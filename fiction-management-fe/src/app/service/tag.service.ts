@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Tag } from '../interface/tag';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable, catchError, map, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -19,12 +19,12 @@ export class TagService {
     return this.http.get<Tag>(`${this.urlTag}/${id}`);
   }
 
-  createtag(tag: Tag): Observable<Tag> {
+  createTag(tag: Tag): Observable<Tag> {
     return this.http.post<Tag>(`${this.urlTag}/create`, tag);
   }
 
   updateTag(tag: Tag): Observable<Tag> {
-    return this.http.put<Tag>(`${ this.urlTag}/update/${tag.id}`, tag);
+    return this.http.put<Tag>(`${this.urlTag}/update/${tag.id}`, tag);
   }
 
   deleteTag(id: number): Observable<unknown> {
