@@ -5,6 +5,7 @@ import {
   MAT_DIALOG_DATA,
   MatDialog,
   MatDialogModule,
+  MatDialogRef,
 } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
@@ -14,6 +15,8 @@ import { CommonModule } from '@angular/common';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { S3Service } from '../../service/s3.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-admin-user-feature',
@@ -29,7 +32,7 @@ export class AdminUserFeatureComponent implements OnInit {
 
   userById: User | undefined;
 
-  constructor(private userService: UserService, public dialog: MatDialog) {}
+  constructor(private userService: UserService, private s3Service: S3Service, public dialog: MatDialog) {}
 
   getAllUsers() {
     return this.userService.getUsers().subscribe((users) => {
@@ -37,10 +40,17 @@ export class AdminUserFeatureComponent implements OnInit {
     });
   }
 
-  deleteUser(id: number) {
-    this.userService.deleteUser(id).subscribe(() => {
-      this.getAllUsers();
-    });
+  deleteUser(user: User) {
+    if (user.id) {
+      this.userService.deleteUser(user.id).subscribe(() => {
+        this.getAllUsers();
+        this.deleteFile(user.avatarUrl);
+      });
+    }
+  }
+
+  deleteFile(fileName: string) {
+    this.s3Service.deleteFile(fileName).subscribe();
   }
 
   openDialog(user?: User) {
@@ -78,47 +88,92 @@ export class AdminUserFeatureComponent implements OnInit {
   ],
 })
 export class UserDialog {
-
   constructor(
     private userService: UserService,
-    @Inject(MAT_DIALOG_DATA) public userById: { user?: User }
+    private s3Service: S3Service,
+    public dialogRef: MatDialogRef<UserDialog>,
+    @Inject(MAT_DIALOG_DATA)
+    public userById: { user?: User }
   ) {
-    console.log(this.userById.user?.id);
+    if (this.userById.user) {
+      this.getAvatarUrl(this.userById.user.avatarUrl);
+    }
   }
 
-  dialogTitle = this.userById? 'Update User' : 'Create User';
+  dialogTitle = this.userById.user ? 'Update User' : 'Create User';
 
   username = new FormControl(this.userById.user?.username || '');
   password = new FormControl(this.userById.user?.password || '');
-  avatar = new FormControl(this.userById.user?.avatarUrl || '');
   role = new FormControl(this.userById.user?.role || '');
 
-  createUser(user: User) {
-    this.userService.createUser(user).subscribe();
+  avatarUrl: string = '';
+
+  isAvatar: boolean = this.userById.user ? true : false;
+
+  selectedFile: File | undefined;
+
+  isUpdateFile: boolean = false;
+
+  fileName: string | undefined = this.userById
+    ? this.userById.user?.avatarUrl
+    : '';
+
+  createUser() {
+    const updateUser: User = {
+      username: this.username.value || '',
+      password: this.password.value || '',
+      avatarUrl: this.fileName || '',
+      role: this.role.value || '',
+    };
+    this.userService.createUser(updateUser).subscribe(() => {
+      this.dialogRef.close();
+    });
   }
 
-  updadeUser(user: User) {
-    this.userService.updateUser(user).subscribe();
+  updateUser() {
+    const newUser: User = {
+      id: this.userById.user?.id,
+      username: this.username.value || '',
+      password: this.password.value || '',
+      avatarUrl: this.fileName || '',
+      role: this.role.value || '',
+    };
+    this.userService.updateUser(newUser).subscribe(() => {
+      this.dialogRef.close();
+    });
+  }
+
+  onChange(event: any) {
+    this.isUpdateFile = true;
+    this.selectedFile = event.target.files[0];
+  }
+
+  uploadFile() {
+    if (this.selectedFile) {
+      this.s3Service.uploadFile(this.selectedFile).subscribe((fName) => {
+        this.fileName = fName;
+        if (this.userById.user) {
+          this.updateUser();
+        } else {
+          this.createUser();
+        }
+      });
+    } else {
+      console.log('No file selected');
+    }
+  }
+
+  getAvatarUrl(fileName: string) {
+    this.s3Service
+      .getFileUrl(fileName)
+      .subscribe((fname) => (this.avatarUrl = fname));
   }
 
   onSubmit() {
-    if (this.userById) {
-      const updateUser: User = {
-        id: this.userById.user?.id,
-        username: this.username.value || '',
-        password: this.password.value || '',
-        avatarUrl: this.avatar.value || '',
-        role: this.role.value || '',
-      };
-      this.updadeUser(updateUser);
+    if (this.isUpdateFile) {
+      this.uploadFile();
     } else {
-      const newUser: User = {
-        username: this.username.value || '',
-        password: this.password.value || '',
-        avatarUrl: this.avatar.value || '',
-        role: this.role.value || '',
-      };
-      this.createUser(newUser);
+      this.updateUser();
     }
   }
 }

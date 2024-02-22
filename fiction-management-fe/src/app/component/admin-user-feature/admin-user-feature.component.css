@@ -84,3 +84,13 @@ table {
 .example-form-field {
   width: 100%;
 }
+
+.wapper-img-input {
+
+  display: flex;
+}
+
+.img-size {
+  width: 250px;
+  height: auto;
+}

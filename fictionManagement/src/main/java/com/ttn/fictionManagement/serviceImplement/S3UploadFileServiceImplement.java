@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.net.URL;
 
 @Service
 @Slf4j
@@ -30,7 +31,13 @@ public class S3UploadFileServiceImplement implements S3UploadFileService {
         amazonS3.putObject(new PutObjectRequest(bucketName, fileName, fileObject));
         fileObject.delete();
 
-        return "File uploaded: " + fileName;
+//        URL fileUrl = amazonS3.getUrl(bucketName, fileName);
+        return fileName;
+    }
+
+    @Override
+    public String getFileUrl(String fileName) {
+        return amazonS3.getUrl(bucketName, fileName).toString();
     }
 
     @Override

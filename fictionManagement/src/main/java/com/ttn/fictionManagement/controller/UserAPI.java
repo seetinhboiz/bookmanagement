@@ -52,8 +52,8 @@ public class UserAPI {
             return new ResponseEntity<>(user, HttpStatus.CREATED);
         } catch (Exception e) {
             loggerException("creating", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+        }return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PutMapping("/update/{id}")

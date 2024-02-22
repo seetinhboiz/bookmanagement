@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/s3")
+@CrossOrigin
 public class S3UploadFileAPI {
     private S3UploadFileService s3UploadFileService;
 
@@ -20,6 +21,11 @@ public class S3UploadFileAPI {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam(value = "file") MultipartFile file) {
         return new ResponseEntity<>(s3UploadFileService.uploadFile(file), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/getUrl/{fileName}")
+    public ResponseEntity<String> getFileUrl(@PathVariable String fileName) {
+        return new ResponseEntity<>(s3UploadFileService.getFileUrl(fileName), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{fileName}")

@@ -6,7 +6,8 @@ import java.io.File;
 
 public interface S3UploadFileService {
     String uploadFile(MultipartFile file);
-    File convertMultiPartFileToFile(MultipartFile file);
 
+    String getFileUrl(String fileName);
+    File convertMultiPartFileToFile(MultipartFile file);
     String deleteFile(String fileName);
 }
