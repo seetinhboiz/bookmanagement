@@ -1,0 +1,82 @@
+<h2>FICTION DETAILS MANAGEMENT</h2>
+<div class="wrapper">
+  <div class="example-container">
+    <form class="example-form">
+      <div class="wrapper-input">
+        <mat-form-field class="example-full-width">
+          <mat-label>Name</mat-label>
+          <input matInput type="text" />
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Author</mat-label>
+          <input matInput type="text" />
+        </mat-form-field>
+      </div>
+      <div class="wrapper-input">
+        <mat-form-field class="example-full-width">
+          <mat-label>Count View</mat-label>
+          <input matInput type="number" />
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Status</mat-label>
+          <mat-select #fontSize value="16px" (selectionChange)="onChange()">
+            <mat-option value="1">Accomplished</mat-option>
+            <mat-option value="0">Composing</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field class="example-full-width input-full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput></textarea>
+      </mat-form-field>
+
+      <div>
+        <label for="avatarFile">Cover Fiction:</label>
+      </div>
+      <span class="wapper-img-input">
+        <input
+          type="file"
+          id="avatarFile"
+          name="avatarFile"
+          enctype="multipart"
+        />
+        <img src="avatarUrl" alt="avatar" class="img-size" />
+      </span>
+    </form>
+
+    <mat-divider class="divider"></mat-divider>
+
+    <h3>CHAPTERS</h3>
+    <div class="wrapper-button">
+      <div class="wrapper-button-align">
+        <button mat-fab extended color="primary" class="button-add">
+          <mat-icon>add</mat-icon>
+          New chapter
+        </button>
+      </div>
+    </div>
+
+    <mat-divider class="divider"></mat-divider>
+    <div class="wrapper-button">
+      <button
+        mat-fab
+        extended
+        color="basic"
+        class="button-add button-action-fiction"
+      >
+        <mat-icon>close</mat-icon>
+        Cancel
+      </button>
+      <button
+        mat-fab
+        extended
+        color="primary"
+        class="button-add button-action-fiction"
+      >
+        <mat-icon>add</mat-icon>
+        Save
+      </button>
+    </div>
+  </div>
+</div>

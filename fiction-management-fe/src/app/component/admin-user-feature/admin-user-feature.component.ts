@@ -1,22 +1,20 @@
+import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { User } from '../../interface/user';
-import { UserService } from '../../service/user.service';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
+import { User } from '../../interface/user';
 import { S3Service } from '../../service/s3.service';
-import { Observable } from 'rxjs';
+import { UserService } from '../../service/user.service';
 
 @Component({
   selector: 'app-admin-user-feature',
@@ -32,7 +30,11 @@ export class AdminUserFeatureComponent implements OnInit {
 
   userById: User | undefined;
 
-  constructor(private userService: UserService, private s3Service: S3Service, public dialog: MatDialog) {}
+  constructor(
+    private userService: UserService,
+    private s3Service: S3Service,
+    public dialog: MatDialog
+  ) {}
 
   getAllUsers() {
     return this.userService.getUsers().subscribe((users) => {
@@ -44,7 +46,6 @@ export class AdminUserFeatureComponent implements OnInit {
     if (user.id) {
       this.userService.deleteUser(user.id).subscribe(() => {
         this.getAllUsers();
-        this.deleteFile(user.avatarUrl);
       });
     }
   }
@@ -81,7 +82,6 @@ export class AdminUserFeatureComponent implements OnInit {
     ReactiveFormsModule,
     FormsModule,
     CommonModule,
-    MatGridListModule,
     MatIconModule,
     MatInputModule,
     MatFormFieldModule,

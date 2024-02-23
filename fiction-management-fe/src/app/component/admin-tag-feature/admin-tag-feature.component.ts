@@ -1,23 +1,22 @@
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { TagService } from '../../service/tag.service';
-import { Tag } from '../../interface/tag';
-import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
   MatDialogModule,
 } from '@angular/material/dialog';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { AsyncPipe } from '@angular/common';
-import { MatInputModule } from '@angular/material/input';
+import { Tag } from '../../interface/tag';
+import { TagService } from '../../service/tag.service';
 
 @Component({
   selector: 'app-admin-tag-feature',

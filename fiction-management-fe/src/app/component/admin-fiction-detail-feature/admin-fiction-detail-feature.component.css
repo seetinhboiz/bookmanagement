@@ -1,0 +1,59 @@
+h2 {
+  text-align: center;
+  font-weight: 600;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.example-container {
+  width: 80%;
+  margin: 20px 0;
+  overflow: auto;
+}
+
+.example-form {
+  width: 100%;
+}
+
+.wrapper-input {
+  display: flex;
+  justify-content: space-between;
+}
+
+.example-full-width {
+  width: 44%;
+}
+
+.example-full-width.input-full-width {
+  width: 100%;
+}
+
+.divider {
+  margin: 40px 0;
+}
+
+h3 {
+  text-align: center;
+  font-weight: 600;
+}
+
+.wrapper-button {
+  display: flex;
+  justify-content: center;
+}
+
+.wrapper-button-align {
+  width: 80%;
+  text-align: right;
+}
+
+.wrapper-button {
+  margin-bottom: 40px;
+}
+
+.button-action-fiction {
+  margin: 0 20px;
+}
