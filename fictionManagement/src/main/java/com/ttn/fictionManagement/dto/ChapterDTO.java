@@ -10,4 +10,5 @@ public class ChapterDTO {
     private String name;
     private String content;
     private Integer fictionId;
+    private Integer sort;
 }

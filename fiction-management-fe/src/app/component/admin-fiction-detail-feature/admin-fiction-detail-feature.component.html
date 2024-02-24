@@ -56,6 +56,11 @@
         </button>
       </div>
     </div>
+    <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+      @for (movie of movies; track movie) {
+      <div class="example-box" cdkDrag>{{ movie }}</div>
+      }
+    </div>
 
     <mat-divider class="divider"></mat-divider>
     <div class="wrapper-button">

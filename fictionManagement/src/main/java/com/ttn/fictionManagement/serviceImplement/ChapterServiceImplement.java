@@ -27,7 +27,7 @@ public class ChapterServiceImplement implements ChapterService {
 
     @Override
     public List<ChapterDTO> findAll() {
-        List<Chapter> chapters = chapterRepository.findAll(Sort.by(Sort.Direction.ASC, ("name")));
+        List<Chapter> chapters = chapterRepository.findAll(Sort.by(Sort.Direction.ASC, ("sort")));
         return chapters.stream().map(chapter -> modelMapper.map(chapter, ChapterDTO.class)).collect(Collectors.toList());
     }
 

@@ -22,4 +22,7 @@ public class Chapter {
 
     @Column(name = "fictionId")
     private Integer fictionId;
+
+    @Column(name = "sort")
+    private Integer sort;
 }
