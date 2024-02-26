@@ -47,4 +47,10 @@ public class ChapterServiceImplement implements ChapterService {
     public void deleteChapter(long id) {
         chapterRepository.deleteById(id);
     }
+
+    @Override
+    public List<ChapterDTO> findAllByFictionId(long id) {
+        List<Chapter> chaptersByFictionId = chapterRepository.findAllByFictionId(id);
+        return chaptersByFictionId.stream().map(chapter -> modelMapper.map(chapter, ChapterDTO.class)).collect(Collectors.toList());
+    }
 }

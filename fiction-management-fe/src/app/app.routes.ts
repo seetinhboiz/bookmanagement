@@ -27,7 +27,7 @@ export const routes: Routes = [
     component: AdminFictionDetailFeatureComponent,
   },
   {
-    path: 'admin/fiction/update',
+    path: 'admin/fiction/update/:id',
     component: AdminFictionDetailFeatureComponent,
   },
 ];

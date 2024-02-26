@@ -18,8 +18,8 @@ public class Comment {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "chapterId")
-    private Integer chapterId;
+    @Column(name = "fictionId")
+    private Integer fictionId;
 
     @Column(name = "userId")
     private Integer userId;

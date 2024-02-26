@@ -87,6 +87,11 @@ public class UserAPI {
         }
     }
 
+    @GetMapping("/username/{username}")
+    public ResponseEntity<UserDTO> getByUsername(@PathVariable String username) {
+        return new ResponseEntity<>(userService.findByUsername(username), HttpStatus.OK);
+    }
+
     public void loggerException(String action, Exception e) {
         logger.error("Error occurred while " + action + " user", e);
     }

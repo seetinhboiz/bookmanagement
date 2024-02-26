@@ -88,6 +88,11 @@ public class ChapterAPI {
         }
     }
 
+    @GetMapping("/{fictionId}/chapters")
+    public ResponseEntity<List<ChapterDTO>> getAllByFictionId(@PathVariable long fictionId) {
+        return new ResponseEntity<>(chapterService.findAllByFictionId(fictionId), HttpStatus.OK);
+    }
+
     public void loggerException(String action, Exception e) {
         logger.error("Error occurred while " + action + " chapter", e);
     }

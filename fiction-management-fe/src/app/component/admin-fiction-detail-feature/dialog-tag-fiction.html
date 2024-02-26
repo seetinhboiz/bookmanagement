@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>{{ dialogTitle }}</h2>
+
+<mat-dialog-content class="mat-typography">
+  <form class="example-form-dialog">
+    <mat-form-field class="example-full-width-dialog">
+      <mat-label>Tag Name</mat-label>
+      <input
+        type="text"
+        matInput
+        [formControl]="name"
+        [matAutocomplete]="auto"
+      />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        [displayWith]="displayFn"
+        (optionSelected)="onOptionSelected($event)"
+      >
+        @for (option of filteredOptions | async; track option) {
+        <mat-option [value]="option">{{option.name}}</mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button *ngIf="addButton" mat-button cdkFocusInitial (click)="onAdd()">
+    Add
+  </button>
+  <button *ngIf="createButton" mat-button cdkFocusInitial (click)="onSubmit()">
+    Save
+  </button>
+</mat-dialog-actions>

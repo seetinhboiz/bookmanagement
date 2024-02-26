@@ -57,4 +57,10 @@ public class UserServiceImplement implements UserService {
         }
         userRepository.deleteById(id);
     }
+
+    @Override
+    public UserDTO findByUsername(String username) {
+        User userbByUsername = userRepository.findByUsername(username);
+        return modelMapper.map(userbByUsername, UserDTO.class);
+    }
 }

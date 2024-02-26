@@ -10,4 +10,5 @@ public interface UserService {
     public Optional<UserDTO> findById(Long id);
     public UserDTO createOrUpdate (UserDTO userDTO);
     public void deleteUser(long id);
+    public UserDTO findByUsername(String username);
 }

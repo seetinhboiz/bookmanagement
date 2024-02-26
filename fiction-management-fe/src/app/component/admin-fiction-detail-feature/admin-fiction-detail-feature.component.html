@@ -7,16 +7,12 @@
           <mat-label>Name</mat-label>
           <input matInput type="text" />
         </mat-form-field>
-        <mat-form-field class="example-full-width">
+
+        <!-- <mat-form-field class="example-full-width">
           <mat-label>Author</mat-label>
           <input matInput type="text" />
-        </mat-form-field>
-      </div>
-      <div class="wrapper-input">
-        <mat-form-field class="example-full-width">
-          <mat-label>Count View</mat-label>
-          <input matInput type="number" />
-        </mat-form-field>
+        </mat-form-field> -->
+
         <mat-form-field class="example-full-width">
           <mat-label>Status</mat-label>
           <mat-select #fontSize value="16px" (selectionChange)="onChange()">
@@ -26,49 +22,157 @@
         </mat-form-field>
       </div>
 
+      <!-- <div class="wrapper-input">
+        <mat-form-field class="example-full-width">
+          <mat-label>Count View</mat-label>
+          <input matInput type="number" />
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width">
+          <mat-label>Status</mat-label>
+          <mat-select #fontSize value="16px" (selectionChange)="onChange()">
+            <mat-option value="1">Accomplished</mat-option>
+            <mat-option value="0">Composing</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div> -->
+
       <mat-form-field class="example-full-width input-full-width">
         <mat-label>Description</mat-label>
         <textarea matInput></textarea>
       </mat-form-field>
 
-      <div>
-        <label for="avatarFile">Cover Fiction:</label>
-      </div>
-      <span class="wapper-img-input">
+      <label
+        class="drop-area"
+        [class.drag-over]="dragging"
+        for="fileInput"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+      >
+        <div *ngIf="!dragging" class="drop-message">
+          Drag & Drop Cover Image Here
+        </div>
+        <div *ngIf="dragging" class="drop-message">Drop Here</div>
         <input
           type="file"
-          id="avatarFile"
-          name="avatarFile"
-          enctype="multipart"
+          id="fileInput"
+          multiple
+          accept="image/*"
+          (change)="onFileSelected($event)"
         />
-        <img src="avatarUrl" alt="avatar" class="img-size" />
-      </span>
+        <div id="image-preview">
+          <div class="image-preview-item">
+            <img [src]="avatarUrl" />
+          </div>
+        </div>
+      </label>
     </form>
 
     <mat-divider class="divider"></mat-divider>
 
-    <h3>CHAPTERS</h3>
-    <div class="wrapper-button">
-      <div class="wrapper-button-align">
-        <button mat-fab extended color="primary" class="button-add">
-          <mat-icon>add</mat-icon>
-          New chapter
-        </button>
+    <div class="wrapper-tag" *ngIf="isUpdate">
+      <h3>TAGS</h3>
+      <div class="wrapper-button">
+        <div class="wrapper-button-align">
+          <button
+            mat-fab
+            extended
+            color="accent"
+            class="button-add button-add-tag"
+            (click)="openDialog('Add tag')"
+          >
+            <mat-icon>add</mat-icon>
+            Add tag
+          </button>
+          <button
+            mat-fab
+            extended
+            color="primary"
+            class="button-add"
+            (click)="openDialog('Create tag')"
+          >
+            <mat-icon>add</mat-icon>
+            New tag
+          </button>
+        </div>
       </div>
-    </div>
-    <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
-      @for (movie of movies; track movie) {
-      <div class="example-box" cdkDrag>{{ movie }}</div>
-      }
+      <div class="tag-list">
+        <div class="demo-section">
+          <button mat-raised-button color="accent" matBadgePosition="before">
+            Cổ trang
+          </button>
+        </div>
+        <div class="demo-section">
+          <button mat-raised-button color="accent" matBadgePosition="before">
+            Xuyên không
+          </button>
+        </div>
+        <div class="demo-section">
+          <button mat-raised-button color="accent" matBadgePosition="before">
+            Dã dử
+          </button>
+        </div>
+      </div>
+      <mat-divider class="divider"></mat-divider>
     </div>
 
-    <mat-divider class="divider"></mat-divider>
+    <div class="wrapper-chapter" *ngIf="isUpdate">
+      <h3>CHAPTERS</h3>
+      <div class="wrapper-button">
+        <div class="wrapper-button-align">
+          <button mat-fab extended color="primary" class="button-add">
+            <mat-icon>add</mat-icon>
+            New chapter
+          </button>
+        </div>
+      </div>
+      <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+        @for (movie of movies; track movie) {
+        <div class="example-box" cdkDrag>{{ movie }}</div>
+        }
+      </div>
+
+      <mat-divider class="divider"></mat-divider>
+    </div>
+
+    <div class="wrapper-comment" *ngIf="isUpdate">
+      <h3>COMMENT</h3>
+      <div class="comment">
+        <div class="avatar-wrapper">
+          <img src="https://shorturl.at/uyLNR" alt="" class="avatar" />
+        </div>
+        <div class="comment-detail">
+          <div class="comment-username">nghia</div>
+          <div class="comment-content">Truyện hay</div>
+        </div>
+      </div>
+      <div class="comment-action">
+        <button mat-button color="warn">Delete</button>
+      </div>
+      <div class="comment">
+        <div class="avatar-wrapper">
+          <img src="https://shorturl.at/uyLNR" alt="" class="avatar" />
+        </div>
+        <div class="comment-detail">
+          <div class="comment-username">nghia</div>
+          <div class="comment-content">Truyện cũng được</div>
+        </div>
+      </div>
+      <div class="comment-action">
+        <button mat-button color="warn">Delete</button>
+      </div>
+
+      <mat-divider class="divider"></mat-divider>
+    </div>
+
     <div class="wrapper-button">
       <button
         mat-fab
         extended
         color="basic"
         class="button-add button-action-fiction"
+        (click)="goBack()"
       >
         <mat-icon>close</mat-icon>
         Cancel

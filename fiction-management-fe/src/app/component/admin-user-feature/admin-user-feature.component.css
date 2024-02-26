@@ -85,12 +85,50 @@ table {
   width: 100%;
 }
 
-.wapper-img-input {
-
+/* Drag drop image */
+.drop-area {
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.img-size {
-  width: 250px;
-  height: auto;
+.drop-area label {
+  width: 100%;
+  overflow: hidden;
+}
+
+.drop-message {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+#image-preview {
+  margin-top: 20px;
+}
+
+.image-preview-item {
+  margin: 5px;
+  display: inline-block;
+}
+
+.image-preview-item img {
+  max-width: 200px;
+}
+
+/* Hide the input visually */
+#fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }

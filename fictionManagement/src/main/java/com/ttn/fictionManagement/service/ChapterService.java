@@ -10,4 +10,5 @@ public interface ChapterService {
     public Optional<ChapterDTO> findById(long id);
     public ChapterDTO createOrUpdate(ChapterDTO chapterDTO);
     public void deleteChapter(long id);
+    public List<ChapterDTO> findAllByFictionId(long id);
 }

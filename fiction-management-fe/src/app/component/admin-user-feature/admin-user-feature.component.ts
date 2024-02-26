@@ -176,4 +176,44 @@ export class UserDialog {
       this.updateUser();
     }
   }
+
+  // Drag drop image
+  dragging = false;
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    this.dragging = true;
+  }
+
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    this.dragging = false;
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    this.dragging = false;
+    const files = event.dataTransfer?.files || null;
+    this.handleFiles(files);
+  }
+
+  onFileSelected(event: Event) {
+    const files = (event.target as HTMLInputElement).files;
+    this.handleFiles(files);
+  }
+
+  handleFiles(files: FileList | null) {
+    if (!files) return;
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file.type.match('image.*')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const imageUrl = e.target?.result as string;
+          this.avatarUrl = imageUrl;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  }
 }
