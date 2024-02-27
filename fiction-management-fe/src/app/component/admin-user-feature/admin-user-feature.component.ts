@@ -50,10 +50,6 @@ export class AdminUserFeatureComponent implements OnInit {
     }
   }
 
-  deleteFile(fileName: string) {
-    this.s3Service.deleteFile(fileName).subscribe();
-  }
-
   openDialog(user?: User) {
     this.dialog.open(UserDialog, {
       minWidth: '400px',
@@ -119,26 +115,26 @@ export class UserDialog {
     : '';
 
   createUser() {
-    const updateUser: User = {
+    const newUser: User = {
       username: this.username.value || '',
       password: this.password.value || '',
       avatarUrl: this.fileName || '',
       role: this.role.value || '',
     };
-    this.userService.createUser(updateUser).subscribe(() => {
+    this.userService.createUser(newUser).subscribe(() => {
       this.dialogRef.close();
     });
   }
 
   updateUser() {
-    const newUser: User = {
+    const updateUser: User = {
       id: this.userById.user?.id,
       username: this.username.value || '',
       password: this.password.value || '',
       avatarUrl: this.fileName || '',
       role: this.role.value || '',
     };
-    this.userService.updateUser(newUser).subscribe(() => {
+    this.userService.updateUser(updateUser).subscribe(() => {
       this.dialogRef.close();
     });
   }
@@ -197,9 +193,11 @@ export class UserDialog {
     this.handleFiles(files);
   }
 
-  onFileSelected(event: Event) {
+  onFileSelected(event: any) {
     const files = (event.target as HTMLInputElement).files;
     this.handleFiles(files);
+    this.isUpdateFile = true;
+    this.selectedFile = event.target.files[0];
   }
 
   handleFiles(files: FileList | null) {

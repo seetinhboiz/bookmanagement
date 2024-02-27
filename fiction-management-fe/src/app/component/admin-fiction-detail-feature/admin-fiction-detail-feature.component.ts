@@ -27,8 +27,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable, map, startWith } from 'rxjs';
 import { Fiction } from '../../interface/fiction';
 import { Tag } from '../../interface/tag';
-import { TagService } from '../../service/tag.service';
 import { FictionService } from '../../service/fiction.service';
+import { S3Service } from '../../service/s3.service';
+import { TagService } from '../../service/tag.service';
 
 @Component({
   selector: 'app-admin-fiction-detail-feature',
@@ -43,30 +44,17 @@ import { FictionService } from '../../service/fiction.service';
     CdkDropList,
     CdkDrag,
     MatBadgeModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './admin-fiction-detail-feature.component.html',
   styleUrl: './admin-fiction-detail-feature.component.css',
 })
 export class AdminFictionDetailFeatureComponent implements OnInit {
-  fictionById: Fiction | null = null;
-  isUpdate: boolean = false;
-
-  movies = [
-    'Episode I - The Phantom Menace',
-    'Episode II - Attack of the Clones',
-    'Episode III - Revenge of the Sith',
-    'Episode IV - A New Hope',
-    'Episode V - The Empire Strikes Back',
-    'Episode VI - Return of the Jedi',
-    'Episode VII - The Force Awakens',
-    'Episode VIII - The Last Jedi',
-    'Episode IX – The Rise of Skywalker',
-  ];
-
   constructor(
     private route: ActivatedRoute,
     private location: Location,
     private fictionService: FictionService,
+    private s3Service: S3Service,
     public dialog: MatDialog
   ) {}
 
@@ -74,14 +62,121 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
     this.getFictionById();
   }
 
+  fictionById: Fiction | null = null;
+  isUpdate: boolean = false;
+
+  isUpdateFile: boolean = false;
+  selectedFile: File | undefined;
+
+  avatarUrl: string = '';
+  dragging = false;
+
+  name = new FormControl();
+  status = new FormControl();
+  description = new FormControl();
+  userId = new FormControl();
+  countView = new FormControl();
+  coverUrl = new FormControl();
+
+  movies = [
+    {
+      title: 'Episode I - The Phantom Menace',
+      sort: 1,
+    },
+    {
+      title: 'Episode II - Attack of the Clones',
+      sort: 2,
+    },
+    {
+      title: 'Episode III - Revenge of the Sith',
+      sort: 3,
+    },
+    {
+      title: 'Episode IV - A New Hope',
+      sort: 4,
+    },
+    {
+      title: 'Episode V - The Empire Strikes Back',
+      sort: 5,
+    },
+    {
+      title: 'Episode VI - Return of the Jedi',
+      sort: 6,
+    },
+    {
+      title: 'Episode VII - The Force Awakens',
+      sort: 7,
+    },
+    {
+      title: 'Episode VIII - The Last Jedi',
+      sort: 8,
+    },
+    {
+      title: 'Episode IX – The Rise of Skywalker',
+      sort: 9,
+    },
+  ];
+
   getFictionById() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.fictionService.getFictionById(id).subscribe((fiction) => {
       this.fictionById = fiction;
       if (this.fictionById !== null) {
         this.isUpdate = true;
+        this.updateFormControls();
+        this.getFictionCover();
       }
     });
+  }
+
+  getFictionCover() {
+    if (this.fictionById) {
+      this.s3Service
+        .getFileUrl(this.fictionById?.coverUrl)
+        .subscribe((url) => (this.avatarUrl = url));
+    }
+  }
+
+  updateFormControls() {
+    this.name.setValue(this.fictionById?.name);
+    this.status.setValue(this.fictionById?.status);
+    this.description.setValue(this.fictionById?.description);
+    this.countView.setValue(this.fictionById?.countView);
+    this.userId.setValue(this.fictionById?.userId);
+  }
+
+  createFiction() {
+    const newFiction: Fiction = {
+      name: this.name.value,
+      status: this.status.value,
+      description: this.description.value,
+      countView: 0,
+      userId: 1,
+      coverUrl: this.avatarUrl,
+    };
+    this.fictionService.createFiction(newFiction).subscribe(() => this.location.back());
+  }
+
+  onFileSelected(event: any) {
+    const files = (event.target as HTMLInputElement).files;
+    this.handleFiles(files);
+    this.isUpdateFile = true;
+    this.selectedFile = event.target.files[0];
+  }
+
+  uploadFileAndSave() {
+    if (this.selectedFile) {
+      this.s3Service.uploadFile(this.selectedFile).subscribe((fName) => {
+        this.avatarUrl = fName;
+        if (this.fictionById) {
+          // this.updateUser();
+        } else {
+          this.createFiction();
+        }
+      });
+    } else {
+      console.log('No file selected');
+    }
   }
 
   goBack() {
@@ -98,12 +193,12 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
   // Chapter drag drop
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.movies, event.previousIndex, event.currentIndex);
+    this.movies.forEach((movie, index) => {
+      movie.sort = index + 1;
+    });
   }
 
   // Drag drop image
-  dragging = false;
-  avatarUrl: string = '';
-
   onDragOver(event: DragEvent) {
     event.preventDefault();
     this.dragging = true;
@@ -118,11 +213,6 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
     event.preventDefault();
     this.dragging = false;
     const files = event.dataTransfer?.files || null;
-    this.handleFiles(files);
-  }
-
-  onFileSelected(event: Event) {
-    const files = (event.target as HTMLInputElement).files;
     this.handleFiles(files);
   }
 
@@ -141,7 +231,15 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
     }
   }
 
-  onChange() {}
+  onSelectChange() {}
+
+  onSubmitFiction() {
+    if (this.fictionById) {
+      console.log('update');
+    } else {
+      this.uploadFileAndSave();
+    }
+  }
 }
 
 // Dialog Component

@@ -23,7 +23,9 @@
       (dragleave)="onDragLeave($event)"
       (drop)="onDrop($event)"
     >
-      <div *ngIf="!dragging" class="drop-message">Drag & Drop Avatar Image Here</div>
+      <div *ngIf="!dragging" class="drop-message">
+        Drag & Drop Avatar Image Here
+      </div>
       <div *ngIf="dragging" class="drop-message">Drop Here</div>
       <input
         type="file"

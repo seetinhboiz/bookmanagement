@@ -1,6 +1,7 @@
 package com.ttn.fictionManagement.controller;
 
 import com.ttn.fictionManagement.dto.FictionDTO;
+import com.ttn.fictionManagement.dto.FictionUserDTO;
 import com.ttn.fictionManagement.service.FictionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ public class FictionAPI {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<FictionDTO>> getAllFictions() {
+    public ResponseEntity<List<FictionUserDTO>> getAllFictions() {
         try {
             return new ResponseEntity<>(fictionService.findAll(), HttpStatus.OK);
         } catch (Exception e) {

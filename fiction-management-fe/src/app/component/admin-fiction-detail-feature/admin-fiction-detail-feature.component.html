@@ -5,41 +5,38 @@
       <div class="wrapper-input">
         <mat-form-field class="example-full-width">
           <mat-label>Name</mat-label>
-          <input matInput type="text" />
+          <input matInput type="text" [formControl]="name" />
         </mat-form-field>
-
-        <!-- <mat-form-field class="example-full-width">
-          <mat-label>Author</mat-label>
-          <input matInput type="text" />
-        </mat-form-field> -->
 
         <mat-form-field class="example-full-width">
           <mat-label>Status</mat-label>
-          <mat-select #fontSize value="16px" (selectionChange)="onChange()">
-            <mat-option value="1">Accomplished</mat-option>
-            <mat-option value="0">Composing</mat-option>
+          <mat-select
+            #fontSize
+            [value]="status.value"
+            (selectionChange)="onSelectChange()"
+            [formControl]="status"
+          >
+            <mat-option [value]="1">Accomplished</mat-option>
+            <mat-option [value]="0">Composing</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
 
-      <!-- <div class="wrapper-input">
-        <mat-form-field class="example-full-width">
-          <mat-label>Count View</mat-label>
-          <input matInput type="number" />
+      <div class="wrapper-input">
+        <mat-form-field class="example-full-width" *ngIf="isUpdate">
+          <mat-label>Author</mat-label>
+          <input matInput type="text" [formControl]="userId" readonly />
         </mat-form-field>
 
-        <mat-form-field class="example-full-width">
-          <mat-label>Status</mat-label>
-          <mat-select #fontSize value="16px" (selectionChange)="onChange()">
-            <mat-option value="1">Accomplished</mat-option>
-            <mat-option value="0">Composing</mat-option>
-          </mat-select>
+        <mat-form-field class="example-full-width" *ngIf="isUpdate">
+          <mat-label>Count View</mat-label>
+          <input matInput type="number" [formControl]="countView" readonly />
         </mat-form-field>
-      </div> -->
+      </div>
 
       <mat-form-field class="example-full-width input-full-width">
         <mat-label>Description</mat-label>
-        <textarea matInput></textarea>
+        <textarea matInput [formControl]="description"></textarea>
       </mat-form-field>
 
       <label
@@ -127,10 +124,15 @@
           </button>
         </div>
       </div>
+
       <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
-        @for (movie of movies; track movie) {
-        <div class="example-box" cdkDrag>{{ movie }}</div>
-        }
+        <div
+          class="example-box"
+          cdkDrag
+          *ngFor="let movie of movies; let i = index"
+        >
+          {{ movie.sort }}. {{ movie.title }}
+        </div>
       </div>
 
       <mat-divider class="divider"></mat-divider>
@@ -182,6 +184,7 @@
         extended
         color="primary"
         class="button-add button-action-fiction"
+        (click)="onSubmitFiction()"
       >
         <mat-icon>add</mat-icon>
         Save
