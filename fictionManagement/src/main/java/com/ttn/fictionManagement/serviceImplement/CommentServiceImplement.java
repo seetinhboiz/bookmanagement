@@ -1,15 +1,19 @@
 package com.ttn.fictionManagement.serviceImplement;
 
 import com.ttn.fictionManagement.dto.CommentDTO;
+import com.ttn.fictionManagement.dto.CommentDetailDTO;
 import com.ttn.fictionManagement.dto.TagFictionDTO;
+import com.ttn.fictionManagement.dto.UserDTO;
 import com.ttn.fictionManagement.entity.Comment;
 import com.ttn.fictionManagement.entity.TagFiction;
 import com.ttn.fictionManagement.repository.CommentRepository;
 import com.ttn.fictionManagement.service.CommentService;
+import com.ttn.fictionManagement.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,11 +22,13 @@ import java.util.stream.Collectors;
 public class CommentServiceImplement implements CommentService {
 
     private final CommentRepository commentRepository;
+    private final UserService userService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public CommentServiceImplement(CommentRepository commentRepository, ModelMapper modelMapper) {
+    public CommentServiceImplement(CommentRepository commentRepository, UserService userService, ModelMapper modelMapper) {
         this.commentRepository = commentRepository;
+        this.userService = userService;
         this.modelMapper = modelMapper;
     }
 
@@ -47,5 +53,19 @@ public class CommentServiceImplement implements CommentService {
     @Override
     public void deleteComment(long id) {
         commentRepository.deleteById(id);
+    }
+
+    @Override
+    public List<CommentDetailDTO> findAllByFictionId(Long fictionId) {
+        List<Comment> comments = commentRepository.findAll();
+        List<CommentDetailDTO> commentByFictionIds = new ArrayList<>();
+
+        for (Comment comment : comments) {
+            CommentDetailDTO commentByFictionId = modelMapper.map(comment, CommentDetailDTO.class);
+            UserDTO userById = modelMapper.map(userService.findById(Long.valueOf(comment.getUserId())), UserDTO.class);
+            commentByFictionId.setUser(userById);
+            commentByFictionIds.add(commentByFictionId);
+        }
+        return commentByFictionIds;
     }
 }

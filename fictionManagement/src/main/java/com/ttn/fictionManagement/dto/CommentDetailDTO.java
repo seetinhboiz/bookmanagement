@@ -5,13 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class FictionUserDTO {
+public class CommentDetailDTO {
     private Integer id;
-    private String name;
-    private Integer countView;
-    private String coverUrl;
-    private Byte status;
-    private String description;
+    private String content;
+    private Integer fictionId;
     private Integer userId;
     private UserDTO user;
 }

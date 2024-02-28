@@ -30,6 +30,7 @@ import { Tag } from '../../interface/tag';
 import { FictionService } from '../../service/fiction.service';
 import { S3Service } from '../../service/s3.service';
 import { TagService } from '../../service/tag.service';
+import { Chapter } from '../../interface/chapter';
 
 @Component({
   selector: 'app-admin-fiction-detail-feature',
@@ -68,7 +69,7 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
   isUpdateFile: boolean = false;
   selectedFile: File | undefined;
 
-  avatarUrl: string = '';
+  avatarUrl = '';
   dragging = false;
 
   name = new FormControl();
@@ -77,45 +78,6 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
   userId = new FormControl();
   countView = new FormControl();
   coverUrl = new FormControl();
-
-  movies = [
-    {
-      title: 'Episode I - The Phantom Menace',
-      sort: 1,
-    },
-    {
-      title: 'Episode II - Attack of the Clones',
-      sort: 2,
-    },
-    {
-      title: 'Episode III - Revenge of the Sith',
-      sort: 3,
-    },
-    {
-      title: 'Episode IV - A New Hope',
-      sort: 4,
-    },
-    {
-      title: 'Episode V - The Empire Strikes Back',
-      sort: 5,
-    },
-    {
-      title: 'Episode VI - Return of the Jedi',
-      sort: 6,
-    },
-    {
-      title: 'Episode VII - The Force Awakens',
-      sort: 7,
-    },
-    {
-      title: 'Episode VIII - The Last Jedi',
-      sort: 8,
-    },
-    {
-      title: 'Episode IX – The Rise of Skywalker',
-      sort: 9,
-    },
-  ];
 
   getFictionById() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -142,7 +104,7 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
     this.status.setValue(this.fictionById?.status);
     this.description.setValue(this.fictionById?.description);
     this.countView.setValue(this.fictionById?.countView);
-    this.userId.setValue(this.fictionById?.userId);
+    this.userId.setValue(this.fictionById?.user?.username);
   }
 
   createFiction() {
@@ -154,7 +116,9 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
       userId: 1,
       coverUrl: this.avatarUrl,
     };
-    this.fictionService.createFiction(newFiction).subscribe(() => this.location.back());
+    this.fictionService
+      .createFiction(newFiction)
+      .subscribe(() => this.location.back());
   }
 
   onFileSelected(event: any) {
@@ -192,10 +156,16 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
 
   // Chapter drag drop
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.movies, event.previousIndex, event.currentIndex);
-    this.movies.forEach((movie, index) => {
-      movie.sort = index + 1;
-    });
+    if (this.fictionById?.chapters !== undefined) {
+      moveItemInArray(
+        this.fictionById?.chapters,
+        event.previousIndex,
+        event.currentIndex
+      );
+      this.fictionById?.chapters.forEach((chapter: Chapter, index: any) => {
+        chapter.sort = index + 1;
+      });
+    }
   }
 
   // Drag drop image

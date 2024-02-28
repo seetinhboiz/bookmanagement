@@ -1,7 +1,7 @@
 package com.ttn.fictionManagement.controller;
 
 import com.ttn.fictionManagement.dto.FictionDTO;
-import com.ttn.fictionManagement.dto.FictionUserDTO;
+import com.ttn.fictionManagement.dto.FictionDetailDTO;
 import com.ttn.fictionManagement.service.FictionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class FictionAPI {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<FictionUserDTO>> getAllFictions() {
+    public ResponseEntity<List<FictionDetailDTO>> getAllFictions() {
         try {
             return new ResponseEntity<>(fictionService.findAll(), HttpStatus.OK);
         } catch (Exception e) {
@@ -36,7 +36,7 @@ public class FictionAPI {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<FictionDTO>> getById(@PathVariable long id) {
+    public ResponseEntity<FictionDetailDTO> getById(@PathVariable long id) {
         try {
             return new ResponseEntity<>(fictionService.findById(id), HttpStatus.OK);
         } catch (Exception e) {
@@ -56,11 +56,11 @@ public class FictionAPI {
         }
     }
 
-     @PutMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<FictionDTO> updateFiction(@RequestBody FictionDTO fiction, @PathVariable long id) {
         try {
-            Optional<FictionDTO> fictionById = fictionService.findById(id);
-            if (fictionById.isPresent()) {
+            FictionDetailDTO fictionById = fictionService.findById(id);
+            if (fictionById.getId() != null) {
                 fictionService.createOrUpdate(fiction);
                 return new ResponseEntity<>(fiction, HttpStatus.OK);
             } else {
@@ -75,8 +75,8 @@ public class FictionAPI {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<FictionDTO> deleteFiction(@PathVariable long id) {
         try {
-            Optional<FictionDTO> fictionById = fictionService.findById(id);
-            if (fictionById.isPresent()) {
+            FictionDetailDTO fictionById = fictionService.findById(id);
+            if (fictionById.getId() != null) {
                 fictionService.deleteFiction(id);
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {

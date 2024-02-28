@@ -24,5 +24,6 @@ public class Chapter {
     private Integer fictionId;
 
     @Column(name = "sort")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer sort;
 }

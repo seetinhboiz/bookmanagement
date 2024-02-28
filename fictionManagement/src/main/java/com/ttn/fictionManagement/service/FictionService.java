@@ -1,14 +1,14 @@
 package com.ttn.fictionManagement.service;
 
 import com.ttn.fictionManagement.dto.FictionDTO;
-import com.ttn.fictionManagement.dto.FictionUserDTO;
+import com.ttn.fictionManagement.dto.FictionDetailDTO;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface FictionService {
-    public List<FictionUserDTO> findAll();
-    public Optional<FictionDTO> findById(long id);
+    public List<FictionDetailDTO> findAll();
+    public FictionDetailDTO findById(long id);
     public FictionDTO createOrUpdate(FictionDTO fictionDTO);
     public void deleteFiction(long id);
 

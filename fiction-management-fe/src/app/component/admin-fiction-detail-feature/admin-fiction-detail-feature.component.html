@@ -129,9 +129,9 @@
         <div
           class="example-box"
           cdkDrag
-          *ngFor="let movie of movies; let i = index"
+          *ngFor="let chapter of this.fictionById?.chapters; let i = index"
         >
-          {{ movie.sort }}. {{ movie.title }}
+          {{ chapter.sort }}. {{ chapter.name }}
         </div>
       </div>
 
@@ -140,31 +140,20 @@
 
     <div class="wrapper-comment" *ngIf="isUpdate">
       <h3>COMMENT</h3>
-      <div class="comment">
-        <div class="avatar-wrapper">
-          <img src="https://shorturl.at/uyLNR" alt="" class="avatar" />
+      <div class="wrapper-comment">
+        <div class="comment">
+          <div class="avatar-wrapper">
+            <img src="https://shorturl.at/uyLNR" alt="" class="avatar" />
+          </div>
+          <div class="comment-detail">
+            <div class="comment-username">nghia</div>
+            <div class="comment-content">Truyện hay</div>
+          </div>
         </div>
-        <div class="comment-detail">
-          <div class="comment-username">nghia</div>
-          <div class="comment-content">Truyện hay</div>
-        </div>
-      </div>
-      <div class="comment-action">
-        <button mat-button color="warn">Delete</button>
-      </div>
-      <div class="comment">
-        <div class="avatar-wrapper">
-          <img src="https://shorturl.at/uyLNR" alt="" class="avatar" />
-        </div>
-        <div class="comment-detail">
-          <div class="comment-username">nghia</div>
-          <div class="comment-content">Truyện cũng được</div>
+        <div class="comment-action">
+          <button mat-button color="warn">Delete</button>
         </div>
       </div>
-      <div class="comment-action">
-        <button mat-button color="warn">Delete</button>
-      </div>
-
       <mat-divider class="divider"></mat-divider>
     </div>
 

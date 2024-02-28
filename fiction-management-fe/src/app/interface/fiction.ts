@@ -1,3 +1,4 @@
+import { Chapter } from './chapter';
 import { User } from './user';
 
 export interface Fiction {
@@ -9,4 +10,6 @@ export interface Fiction {
   description: string;
   userId: number;
   user?: User;
+  chapters?: Chapter[];
+  comments?: Comment[];
 }
