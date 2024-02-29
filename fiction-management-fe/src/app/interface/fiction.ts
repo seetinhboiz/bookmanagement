@@ -1,4 +1,7 @@
 import { Chapter } from './chapter';
+import { Comment } from './comment';
+import { Tag } from './tag';
+import { TagFiction } from './tag-fiction';
 import { User } from './user';
 
 export interface Fiction {
@@ -10,6 +13,7 @@ export interface Fiction {
   description: string;
   userId: number;
   user?: User;
+  tags?: Tag[]; 
   chapters?: Chapter[];
   comments?: Comment[];
 }

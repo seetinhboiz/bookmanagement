@@ -42,16 +42,13 @@ h3 {
 
 .wrapper-button {
   display: flex;
+  margin: 40px 0;
   justify-content: center;
 }
 
 .wrapper-button-align {
   width: 100%;
   text-align: right;
-}
-
-.wrapper-button {
-  margin-bottom: 40px;
 }
 
 .button-add-tag {
@@ -223,4 +220,12 @@ h3 {
 
 .example-full-width-dialog {
   width: 100%;
+}
+
+.mt-30px {
+  margin-top: 30px;
+}
+
+.wrapper {
+  min-height: 80vh
 }

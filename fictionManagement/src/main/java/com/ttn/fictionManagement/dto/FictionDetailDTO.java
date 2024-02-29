@@ -18,4 +18,5 @@ public class FictionDetailDTO {
     private UserDTO user;
     private List<ChapterDTO> chapters;
     private List<CommentDetailDTO> comments;
+    private List<TagDTO> tags;
 }

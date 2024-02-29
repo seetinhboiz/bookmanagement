@@ -57,7 +57,7 @@ public class CommentServiceImplement implements CommentService {
 
     @Override
     public List<CommentDetailDTO> findAllByFictionId(Long fictionId) {
-        List<Comment> comments = commentRepository.findAll();
+        List<Comment> comments = commentRepository.findAllCommentByFictionId(fictionId);
         List<CommentDetailDTO> commentByFictionIds = new ArrayList<>();
 
         for (Comment comment : comments) {

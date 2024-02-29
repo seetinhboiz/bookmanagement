@@ -23,14 +23,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, map, startWith } from 'rxjs';
+import { Chapter } from '../../interface/chapter';
+import { Comment } from '../../interface/comment';
 import { Fiction } from '../../interface/fiction';
 import { Tag } from '../../interface/tag';
 import { FictionService } from '../../service/fiction.service';
 import { S3Service } from '../../service/s3.service';
 import { TagService } from '../../service/tag.service';
-import { Chapter } from '../../interface/chapter';
 
 @Component({
   selector: 'app-admin-fiction-detail-feature',
@@ -46,6 +48,7 @@ import { Chapter } from '../../interface/chapter';
     CdkDrag,
     MatBadgeModule,
     ReactiveFormsModule,
+    MatTabsModule,
   ],
   templateUrl: './admin-fiction-detail-feature.component.html',
   styleUrl: './admin-fiction-detail-feature.component.css',
@@ -72,6 +75,10 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
   avatarUrl = '';
   dragging = false;
 
+  // Comment
+  comments: Comment[] = [];
+  tags: Tag[] = [];
+
   name = new FormControl();
   status = new FormControl();
   description = new FormControl();
@@ -87,7 +94,18 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
         this.isUpdate = true;
         this.updateFormControls();
         this.getFictionCover();
+        this.comments = this.fictionById.comments || [];
+        this.tags = this.fictionById.tags || [];
+        this.loadCommentsWithAvatarUrls();
       }
+    });
+  }
+
+  loadCommentsWithAvatarUrls() {
+    this.comments.forEach((comment, index) => {
+      this.s3Service.getFileUrl(comment.user.avatarUrl).subscribe((url) => {
+        this.comments[index].user.avatarUrl = url;
+      });
     });
   }
 
@@ -146,6 +164,8 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
   goBack() {
     this.location.back();
   }
+
+  onSubmitChapter() {}
 
   openDialog(dialogTitle: string) {
     this.dialog.open(TagFictionDialog, {
