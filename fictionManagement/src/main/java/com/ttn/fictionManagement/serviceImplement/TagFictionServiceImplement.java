@@ -1,17 +1,13 @@
 package com.ttn.fictionManagement.serviceImplement;
 
-import com.ttn.fictionManagement.dto.TagDTO;
 import com.ttn.fictionManagement.dto.TagFictionDTO;
-import com.ttn.fictionManagement.dto.TagFictionDetailDTO;
 import com.ttn.fictionManagement.entity.TagFiction;
 import com.ttn.fictionManagement.repository.TagFictionRepository;
 import com.ttn.fictionManagement.service.TagFictionService;
-import com.ttn.fictionManagement.service.TagService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,13 +16,11 @@ import java.util.stream.Collectors;
 public class TagFictionServiceImplement implements TagFictionService {
 
     private final TagFictionRepository tagFictionRepository;
-    private final TagService tagService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public TagFictionServiceImplement(ModelMapper modelMapper, TagFictionRepository fictionRepository, TagService tagService) {
+    public TagFictionServiceImplement(ModelMapper modelMapper, TagFictionRepository fictionRepository) {
         this.tagFictionRepository = fictionRepository;
-        this.tagService = tagService;
         this.modelMapper = modelMapper;
     }
 

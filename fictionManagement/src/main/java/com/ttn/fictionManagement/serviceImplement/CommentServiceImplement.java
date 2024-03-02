@@ -2,10 +2,8 @@ package com.ttn.fictionManagement.serviceImplement;
 
 import com.ttn.fictionManagement.dto.CommentDTO;
 import com.ttn.fictionManagement.dto.CommentDetailDTO;
-import com.ttn.fictionManagement.dto.TagFictionDTO;
 import com.ttn.fictionManagement.dto.UserDTO;
 import com.ttn.fictionManagement.entity.Comment;
-import com.ttn.fictionManagement.entity.TagFiction;
 import com.ttn.fictionManagement.repository.CommentRepository;
 import com.ttn.fictionManagement.service.CommentService;
 import com.ttn.fictionManagement.service.UserService;

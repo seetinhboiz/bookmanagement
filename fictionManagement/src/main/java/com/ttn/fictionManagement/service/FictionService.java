@@ -4,7 +4,6 @@ import com.ttn.fictionManagement.dto.FictionDTO;
 import com.ttn.fictionManagement.dto.FictionDetailDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface FictionService {
     public List<FictionDetailDTO> findAll();

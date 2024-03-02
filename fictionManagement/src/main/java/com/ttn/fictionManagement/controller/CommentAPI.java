@@ -1,7 +1,6 @@
 package com.ttn.fictionManagement.controller;
 
 import com.ttn.fictionManagement.dto.CommentDTO;
-import com.ttn.fictionManagement.dto.TagFictionDTO;
 import com.ttn.fictionManagement.service.CommentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
