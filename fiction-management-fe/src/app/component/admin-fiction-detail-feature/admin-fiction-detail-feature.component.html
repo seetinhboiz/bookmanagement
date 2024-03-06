@@ -15,7 +15,6 @@
               <mat-select
                 #fontSize
                 [value]="status.value"
-                (selectionChange)="onSelectChange()"
                 [formControl]="status"
               >
                 <mat-option [value]="1">Accomplished</mat-option>
@@ -98,40 +97,47 @@
       </mat-tab>
       <mat-tab label="Tag">
         <div class="wrapper-tag mt-30px" *ngIf="isUpdate">
-          <div class="wrapper-button">
-            <div class="wrapper-button-align">
-              <button
-                mat-fab
-                extended
-                color="accent"
-                class="button-add button-add-tag"
-                (click)="openDialog('Add tag')"
-              >
-                <mat-icon>add</mat-icon>
-                Add tag
-              </button>
-              <button
-                mat-fab
-                extended
-                color="primary"
-                class="button-add"
-                (click)="openDialog('Create tag')"
-              >
-                <mat-icon>add</mat-icon>
-                New tag
-              </button>
-            </div>
-          </div>
-          <div class="tag-list">
-            <div class="demo-section" *ngFor="let tag of this.tags">
+          <div>
+            <div class="demo-section tag-list">
               <button
                 mat-raised-button
                 color="accent"
                 matBadgePosition="before"
+                class="tag-fiction"
+                *ngFor="let tag of this.tags"
               >
                 {{ tag.name }}
               </button>
             </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="avaiable-tag">
+            <h3>AVAILABLE TAG</h3>
+            <div class="wrapper-button">
+              <div class="wrapper-button-align">
+                <button
+                  mat-fab
+                  extended
+                  color="primary"
+                  class="button-add"
+                  (click)="openDialog('Create tag')"
+                >
+                  <mat-icon>add</mat-icon>
+                  New tag
+                </button>
+              </div>
+            </div>
+            <mat-chip-listbox aria-label="Fish selection" multiple>
+              <mat-chip-option
+                color="accent"
+                *ngFor="let tag of availableTags"
+                [selected]="tag.selected"
+                (click)="onTagSelectionChange(tag)"
+                >{{ tag.name }}</mat-chip-option
+              >
+            </mat-chip-listbox>
           </div>
         </div>
       </mat-tab>

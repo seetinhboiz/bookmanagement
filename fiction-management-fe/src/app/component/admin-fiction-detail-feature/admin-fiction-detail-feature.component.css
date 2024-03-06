@@ -158,6 +158,11 @@ h3 {
 .tag-list {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+}
+
+.tag-fiction {
+  margin: 0 10px 10px;
 }
 
 .demo-section {
@@ -228,4 +233,8 @@ h3 {
 
 .wrapper {
   min-height: 80vh
+}
+
+mat-divider {
+  margin: 40px 0;
 }

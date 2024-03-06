@@ -88,6 +88,17 @@ public class TagFictionAPI {
         }
     }
 
+    @DeleteMapping("/delete/{fictionId}/{tagId}")
+    public ResponseEntity<TagFictionDTO> deleteByFictionIdTagId(@PathVariable long fictionId, @PathVariable long tagId) {
+        try {
+            tagFictionService.deleteByFictionIdTagId(fictionId, tagId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            loggerException("deleting", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public void loggerException(String action, Exception e) {
         logger.error("Error occurred while " + action + " tag-fiction", e);
     }

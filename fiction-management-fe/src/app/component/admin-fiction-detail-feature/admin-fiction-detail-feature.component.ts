@@ -13,10 +13,12 @@ import {
 } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
   MatDialogModule,
+  MatDialogRef,
 } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -30,8 +32,10 @@ import { Chapter } from '../../interface/chapter';
 import { Comment } from '../../interface/comment';
 import { Fiction } from '../../interface/fiction';
 import { Tag } from '../../interface/tag';
+import { TagFiction } from '../../interface/tag-fiction';
 import { FictionService } from '../../service/fiction.service';
 import { S3Service } from '../../service/s3.service';
+import { TagFictionService } from '../../service/tag-fiction.service';
 import { TagService } from '../../service/tag.service';
 
 @Component({
@@ -49,6 +53,7 @@ import { TagService } from '../../service/tag.service';
     MatBadgeModule,
     ReactiveFormsModule,
     MatTabsModule,
+    MatChipsModule,
   ],
   templateUrl: './admin-fiction-detail-feature.component.html',
   styleUrl: './admin-fiction-detail-feature.component.css',
@@ -58,6 +63,8 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private fictionService: FictionService,
+    private tagService: TagService,
+    private tagFictionService: TagFictionService,
     private s3Service: S3Service,
     public dialog: MatDialog
   ) {}
@@ -72,13 +79,18 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
   isUpdateFile: boolean = false;
   selectedFile: File | undefined;
 
+  fileName = '';
   avatarUrl = '';
   dragging = false;
 
   // Comment
   comments: Comment[] = [];
-  tags: Tag[] = [];
 
+  // Tag
+  tags: Tag[] = [];
+  availableTags: Tag[] = [];
+
+  // Form Control
   name = new FormControl();
   status = new FormControl();
   description = new FormControl();
@@ -87,18 +99,21 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
   coverUrl = new FormControl();
 
   getFictionById() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.fictionService.getFictionById(id).subscribe((fiction) => {
-      this.fictionById = fiction;
-      if (this.fictionById !== null) {
-        this.isUpdate = true;
-        this.updateFormControls();
-        this.getFictionCover();
-        this.comments = this.fictionById.comments || [];
-        this.tags = this.fictionById.tags || [];
-        this.loadCommentsWithAvatarUrls();
-      }
-    });
+    const idParam = Number(this.route.snapshot.paramMap.get('id'));
+    if (idParam) {
+      this.fictionService.getFictionById(idParam).subscribe((fiction) => {
+        this.fictionById = fiction;
+        if (this.fictionById !== null) {
+          this.isUpdate = true;
+          this.updateFormControls();
+          this.getFictionCover();
+          this.comments = this.fictionById.comments || [];
+          this.tags = this.fictionById.tags || [];
+          this.loadCommentsWithAvatarUrls();
+          this.getAvailableTags();
+        }
+      });
+    }
   }
 
   loadCommentsWithAvatarUrls() {
@@ -117,6 +132,19 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
     }
   }
 
+  getAvailableTags() {
+    this.tagService.getTags().subscribe((tags) => {
+      this.availableTags = tags;
+      this.updateTagSelection();
+    });
+  }
+
+  updateTagSelection() {
+    this.availableTags.forEach((tag) => {
+      tag.selected = this.tags.some((t) => t.id === tag.id);
+    });
+  }
+
   updateFormControls() {
     this.name.setValue(this.fictionById?.name);
     this.status.setValue(this.fictionById?.status);
@@ -131,11 +159,29 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
       status: this.status.value,
       description: this.description.value,
       countView: 0,
-      userId: 1,
-      coverUrl: this.avatarUrl,
+      userId: 134,
+      coverUrl: this.fileName,
     };
     this.fictionService
       .createFiction(newFiction)
+      .subscribe(() => this.location.back());
+  }
+
+  updateFiction() {
+    const updateFiction: Fiction = {
+      id: this.fictionById?.id,
+      name: this.name.value,
+      status: this.status.value,
+      description: this.description.value,
+      countView: 0,
+      userId: 134,
+      coverUrl:
+        this.isUpdateFile && this.fileName
+          ? this.fileName
+          : this.fictionById?.coverUrl || '',
+    };
+    this.fictionService
+      .updateFiction(updateFiction)
       .subscribe(() => this.location.back());
   }
 
@@ -149,9 +195,10 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
   uploadFileAndSave() {
     if (this.selectedFile) {
       this.s3Service.uploadFile(this.selectedFile).subscribe((fName) => {
+        this.fileName = fName;
         this.avatarUrl = fName;
         if (this.fictionById) {
-          // this.updateUser();
+          this.updateFiction();
         } else {
           this.createFiction();
         }
@@ -161,16 +208,49 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
     }
   }
 
+  // TagFiction
+  createTagFiction(tag: Tag) {
+    if (this.fictionById?.id && tag.id) {
+      const tagFiction: TagFiction = {
+        fictionId: this.fictionById?.id,
+        tagId: tag.id,
+      };
+      this.tagFictionService
+        .createTagFiction(tagFiction)
+        .subscribe(() => this.getFictionById());
+    }
+  }
+
+  deleteTagFiction(tag: Tag) {
+    if (this.fictionById?.id && tag.id) {
+      this.tagFictionService
+        .deleteTagFiction(this.fictionById?.id, tag.id)
+        .subscribe(() => this.getFictionById());
+    }
+  }
+
+  onTagSelectionChange(tag: Tag) {
+    tag.selected = !tag.selected;
+    console.log(tag.selected);
+    if (tag.selected) {
+      this.createTagFiction(tag);
+    } else {
+      this.deleteTagFiction(tag);
+    }
+  }
+
   goBack() {
     this.location.back();
   }
-
-  onSubmitChapter() {}
 
   openDialog(dialogTitle: string) {
     this.dialog.open(TagFictionDialog, {
       minWidth: '400px',
       data: { dialogTitle: dialogTitle },
+    });
+
+    this.dialog.afterAllClosed.subscribe(() => {
+      this.getAvailableTags();
     });
   }
 
@@ -221,11 +301,11 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
     }
   }
 
-  onSelectChange() {}
+  onSubmitChapter() {}
 
   onSubmitFiction() {
-    if (this.fictionById) {
-      console.log('update');
+    if (this.fictionById && this.isUpdateFile === false) {
+      this.updateFiction();
     } else {
       this.uploadFileAndSave();
     }
@@ -254,10 +334,6 @@ export class TagFictionDialog implements OnInit {
   dialogTitle = 'Create Tag';
   name = new FormControl<string | Tag>('');
 
-  // Button show
-  addButton: boolean = false;
-  createButton: boolean = false;
-
   // Optional tag
   options: Tag[] = [];
   selectedOption: Tag | null = null;
@@ -265,7 +341,6 @@ export class TagFictionDialog implements OnInit {
   filteredOptions: Observable<Tag[]> = new Observable<Tag[]>();
   private _filter(name: string): Tag[] {
     const filterValue = name.toLowerCase();
-
     return this.options.filter((option) =>
       option.name.toLowerCase().includes(filterValue)
     );
@@ -282,13 +357,18 @@ export class TagFictionDialog implements OnInit {
     this.tagService.getTags().subscribe((tags) => (this.options = tags));
   }
 
-  createTag(tag: Tag) {
-    if (tag.name.trim().length > 0) {
-      this.tagService.createTag(tag).subscribe();
+  createTag() {
+    if (typeof this.name.value === 'string') {
+      const newTag: Tag = { name: this.name.value };
+      if (newTag.name.trim().length > 0) {
+        this.tagService.createTag(newTag).subscribe();
+        this.dialogRef.close();
+      }
     }
   }
 
   constructor(
+    private dialogRef: MatDialogRef<TagFictionDialog>,
     private tagService: TagService,
     @Inject(MAT_DIALOG_DATA) public data: { dialogTitle: string }
   ) {
@@ -301,31 +381,12 @@ export class TagFictionDialog implements OnInit {
     this.selectedOption = event.option.value;
   }
 
-  onAdd() {}
-
-  onSubmit() {}
-
-  // onSubmit() {
-  //   if (typeof this.name.value === 'string') {
-  //     if (this.data.tag) {
-  //       this.data.tag.name = this.name.value;
-  //       this.editTag(this.data.tag);
-  //     } else {
-  //       const newTag: Tag = { id: null, name: this.name.value };
-  //       this.createTag(newTag);
-  //     }
-  //   } else {
-  //     console.log('Invalid name', this.name.value);
-  //   }
-  // }
+  onSubmit() {
+    this.createTag();
+  }
 
   ngOnInit() {
     this.getAllTags();
-    if (this.data.dialogTitle === 'Add tag') {
-      this.addButton = true;
-    } else {
-      this.createButton = true;
-    }
     this.filteredOptions = this.name.valueChanges.pipe(
       startWith(''),
       map((value) => {

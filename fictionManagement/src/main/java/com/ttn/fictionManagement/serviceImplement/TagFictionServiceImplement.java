@@ -52,4 +52,9 @@ public class TagFictionServiceImplement implements TagFictionService {
         List<Long> idTagFictions = tagFictionRepository.findAllByFictionId(fictionId);
         return idTagFictions;
     }
+
+    @Override
+    public void deleteByFictionIdTagId(long fictionId, long tagId) {
+        tagFictionRepository.deleteByFictionIdTagId(fictionId, tagId);
+    }
 }

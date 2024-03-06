@@ -4,5 +4,5 @@ export interface TagFiction {
   id?: number;
   fictionId: number;
   tagId: number;
-  tag: Tag;
+  tag?: Tag;
 }

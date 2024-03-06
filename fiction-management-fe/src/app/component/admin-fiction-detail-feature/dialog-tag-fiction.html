@@ -25,10 +25,7 @@
 
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>
-  <button *ngIf="addButton" mat-button cdkFocusInitial (click)="onAdd()">
-    Add
-  </button>
-  <button *ngIf="createButton" mat-button cdkFocusInitial (click)="onSubmit()">
+  <button mat-button cdkFocusInitial (click)="onSubmit()">
     Save
   </button>
 </mat-dialog-actions>
