@@ -3,5 +3,5 @@ export interface Chapter {
     name: string;
     content: string;
     fictionId: number;
-    sort: number;
+    sort?: number;
 }

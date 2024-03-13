@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ChapterRepository extends JpaRepository<Chapter, Long> {
-    @Query("select chapter from Chapter chapter where chapter.fictionId = ?1")
+    @Query("select chapter from Chapter chapter where chapter.fictionId = ?1 order by chapter.sort asc")
     List<Chapter> findAllByFictionId(long fictionId);
 }

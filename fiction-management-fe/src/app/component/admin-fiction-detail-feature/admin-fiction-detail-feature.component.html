@@ -163,6 +163,27 @@
               *ngFor="let chapter of this.fictionById?.chapters; let i = index"
             >
               {{ chapter.sort }}. {{ chapter.name }}
+              <div>
+                <button
+                  mat-icon-button
+                  matTooltip="Edit"
+                  color="primary"
+                  aria-label="Example icon-button with a heart icon"
+                  class="icon-button"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  matTooltip="Delete"
+                  color="warn"
+                  aria-label="Example icon-button with a heart icon"
+                  class="icon-button"
+                  (click)="chapter.id && onDeleteChapter(chapter.id)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
             </div>
           </div>
           <div class="wrapper-button">
@@ -181,7 +202,7 @@
               extended
               color="primary"
               class="button-add button-action-fiction"
-              (click)="onSubmitChapter()"
+              (click)="onUpdateSortChapter()"
             >
               <mat-icon>add</mat-icon>
               Save

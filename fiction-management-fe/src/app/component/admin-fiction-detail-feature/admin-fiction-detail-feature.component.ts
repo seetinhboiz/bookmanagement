@@ -37,6 +37,7 @@ import { FictionService } from '../../service/fiction.service';
 import { S3Service } from '../../service/s3.service';
 import { TagFictionService } from '../../service/tag-fiction.service';
 import { TagService } from '../../service/tag.service';
+import { ChapterService } from '../../service/chapter.service';
 
 @Component({
   selector: 'app-admin-fiction-detail-feature',
@@ -63,6 +64,7 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private fictionService: FictionService,
+    private chapterService: ChapterService,
     private tagService: TagService,
     private tagFictionService: TagFictionService,
     private s3Service: S3Service,
@@ -299,6 +301,23 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
         reader.readAsDataURL(file);
       }
     }
+  }
+
+  onDragChapter(sort: number, index: number) {
+    console.log('sort: ', sort);
+    console.log('index: ', index);
+  }
+
+  onUpdateSortChapter() {
+    this.fictionById?.chapters?.forEach((chapter) => {
+      this.chapterService.updateChapter(chapter).subscribe();
+    });
+  }
+
+  onDeleteChapter(id: number) {
+    this.chapterService.deleteChapter(id).subscribe(() => {
+      this.getFictionById();
+    });
   }
 
   onSubmitChapter() {}
