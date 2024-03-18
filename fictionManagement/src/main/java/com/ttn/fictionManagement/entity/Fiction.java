@@ -32,4 +32,7 @@ public class Fiction {
 
     @Column(name = "userId")
     private Integer userId;
+
+    @Column(name = "cover_public_id")
+    private String coverPublicId;
 }

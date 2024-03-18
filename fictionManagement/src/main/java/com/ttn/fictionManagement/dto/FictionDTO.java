@@ -13,4 +13,5 @@ public class FictionDTO {
     private Byte status;
     private String description;
     private Integer userId;
+    private String coverPublicId;
 }

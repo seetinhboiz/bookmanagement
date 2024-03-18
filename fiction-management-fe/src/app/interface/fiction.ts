@@ -12,7 +12,8 @@ export interface Fiction {
   description: string;
   userId: number;
   user?: User;
-  tags?: Tag[]; 
+  tags?: Tag[];
   chapters?: Chapter[];
   comments?: Comment[];
+  coverPublicId?: string;
 }

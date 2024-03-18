@@ -3,7 +3,7 @@ package com.ttn.fictionManagement.serviceImplement;
 import com.ttn.fictionManagement.dto.UserDTO;
 import com.ttn.fictionManagement.entity.User;
 import com.ttn.fictionManagement.repository.UserRepository;
-import com.ttn.fictionManagement.service.S3UploadFileService;
+import com.ttn.fictionManagement.service.FileUploadService;
 import com.ttn.fictionManagement.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +19,14 @@ public class UserServiceImplement implements UserService {
 
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
-    private final S3UploadFileService s3UploadFileService;
+    private final FileUploadService fileUploadService;
 
     @Autowired
     public UserServiceImplement(UserRepository userRepository,
                                 ModelMapper modelMapper,
-                                S3UploadFileService s3UploadFileService) {
+                                FileUploadService fileUploadService) {
         this.userRepository = userRepository;
-        this.s3UploadFileService = s3UploadFileService;
+        this.fileUploadService = fileUploadService;
         this.modelMapper = modelMapper;
     }
 
@@ -53,7 +53,7 @@ public class UserServiceImplement implements UserService {
     public void deleteUser(long id) {
         Optional<User> userOptionById = userRepository.findById(id);
         if (userOptionById.isPresent()) {
-            userOptionById.map(user -> s3UploadFileService.deleteFile(user.getAvatarUrl()));
+//            userOptionById.map(user -> s3UploadFileService.deleteFile(user.getAvatarUrl()));
         }
         userRepository.deleteById(id);
     }

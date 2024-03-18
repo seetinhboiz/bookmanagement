@@ -25,4 +25,7 @@ public class User {
 
     @Column(name = "role")
     private String role;
+
+    @Column(name = "avatar_public_id")
+    private String avatarPublicId;
 }

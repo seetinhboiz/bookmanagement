@@ -4,4 +4,5 @@ export interface User {
   password?: string | null;
   avatarUrl: string;
   role: string;
+  avatarPublicId?: string;
 }

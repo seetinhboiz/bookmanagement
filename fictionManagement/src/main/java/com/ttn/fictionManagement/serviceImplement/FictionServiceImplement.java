@@ -21,7 +21,7 @@ public class FictionServiceImplement implements FictionService {
     private final CommentService commentService;
     private final TagFictionService tagFictionService;
     private final TagService tagService;
-    private final S3UploadFileService s3UploadFileService;
+    private final FileUploadService fileUploadService;
     private final ModelMapper modelMapper;
 
     @Autowired
@@ -31,7 +31,7 @@ public class FictionServiceImplement implements FictionService {
                                    CommentService commentService,
                                    TagFictionService tagFictionService,
                                    TagService tagService,
-                                   S3UploadFileService s3UploadFileService,
+                                   FileUploadService fileUploadService,
                                    ModelMapper modelMapper) {
         this.fictionRepository = fictionRepository;
         this.userService = userService;
@@ -39,7 +39,7 @@ public class FictionServiceImplement implements FictionService {
         this.commentService = commentService;
         this.tagFictionService = tagFictionService;
         this.tagService = tagService;
-        this.s3UploadFileService = s3UploadFileService;
+        this.fileUploadService = fileUploadService;
         this.modelMapper = modelMapper;
     }
 
@@ -99,7 +99,7 @@ public class FictionServiceImplement implements FictionService {
     public void deleteFiction(long id) {
         Optional<Fiction> fictionById = fictionRepository.findById(id);
         if (fictionById.isPresent()) {
-            fictionById.map(fiction -> s3UploadFileService.deleteFile(fiction.getCoverUrl()));
+//            fictionById.map(fiction -> s3UploadFileService.deleteFile(fiction.getCoverUrl()));
         }
         fictionRepository.deleteById(id);
     }

@@ -13,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { User } from '../../interface/user';
-import { S3Service } from '../../service/s3.service';
+import { UploadService } from '../../service/upload.service';
 import { UserService } from '../../service/user.service';
 
 @Component({
@@ -30,11 +30,7 @@ export class AdminUserFeatureComponent implements OnInit {
 
   userById: User | undefined;
 
-  constructor(
-    private userService: UserService,
-    private s3Service: S3Service,
-    public dialog: MatDialog
-  ) {}
+  constructor(private userService: UserService, public dialog: MatDialog) {}
 
   getAllUsers() {
     return this.userService.getUsers().subscribe((users) => {
@@ -86,15 +82,11 @@ export class AdminUserFeatureComponent implements OnInit {
 export class UserDialog {
   constructor(
     private userService: UserService,
-    private s3Service: S3Service,
+    private uploadService: UploadService,
     public dialogRef: MatDialogRef<UserDialog>,
     @Inject(MAT_DIALOG_DATA)
     public userById: { user?: User }
-  ) {
-    if (this.userById.user) {
-      this.getAvatarUrl(this.userById.user.avatarUrl);
-    }
-  }
+  ) {}
 
   dialogTitle = this.userById.user ? 'Update User' : 'Create User';
 
@@ -102,7 +94,12 @@ export class UserDialog {
   password = new FormControl(this.userById.user?.password || '');
   role = new FormControl(this.userById.user?.role || '');
 
-  avatarUrl: string = '';
+  avatarUrl: string = this.userById.user?.avatarUrl
+    ? this.userById.user?.avatarUrl
+    : '';
+  avatarPublicId: string = this.userById.user?.avatarPublicId
+    ? this.userById.user?.avatarPublicId
+    : '';
 
   isAvatar: boolean = this.userById.user ? true : false;
 
@@ -120,6 +117,7 @@ export class UserDialog {
       password: this.password.value || '',
       avatarUrl: this.fileName || '',
       role: this.role.value || '',
+      avatarPublicId: this.avatarPublicId || '',
     };
     this.userService.createUser(newUser).subscribe(() => {
       this.dialogRef.close();
@@ -133,6 +131,7 @@ export class UserDialog {
       password: this.password.value || '',
       avatarUrl: this.fileName || '',
       role: this.role.value || '',
+      avatarPublicId: this.avatarPublicId || '',
     };
     this.userService.updateUser(updateUser).subscribe(() => {
       this.dialogRef.close();
@@ -146,23 +145,20 @@ export class UserDialog {
 
   uploadFile() {
     if (this.selectedFile) {
-      this.s3Service.uploadFile(this.selectedFile).subscribe((fName) => {
-        this.fileName = fName;
-        if (this.userById.user) {
-          this.updateUser();
-        } else {
-          this.createUser();
-        }
-      });
+      this.uploadService
+        .uploadFile(this.selectedFile)
+        .subscribe((responseUpload: any) => {
+          this.fileName = responseUpload.url;
+          this.avatarPublicId = responseUpload.public_id;
+          if (this.userById.user) {
+            this.updateUser();
+          } else {
+            this.createUser();
+          }
+        });
     } else {
       console.log('No file selected');
     }
-  }
-
-  getAvatarUrl(fileName: string) {
-    this.s3Service
-      .getFileUrl(fileName)
-      .subscribe((fname) => (this.avatarUrl = fname));
   }
 
   onSubmit() {

@@ -19,4 +19,5 @@ public class FictionDetailDTO {
     private List<ChapterDTO> chapters;
     private List<CommentDetailDTO> comments;
     private List<TagDTO> tags;
+    private String coverPublicId;
 }
