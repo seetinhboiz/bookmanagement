@@ -48,6 +48,7 @@ public class ChapterAPI {
     @PostMapping("/create")
     public ResponseEntity<ChapterDTO> createChapter(@RequestBody ChapterDTO chapter) {
         try {
+            chapter.setSort(chapterService.countChapterByFictionId(chapter.getFictionId()) + 1);
             chapterService.createOrUpdate(chapter);
             return new ResponseEntity<>(chapter, HttpStatus.CREATED);
         } catch (Exception e) {

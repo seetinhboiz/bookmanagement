@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface UserService {
     public List<UserDTO> findAll();
-    public Optional<UserDTO> findById(Long id);
+    public UserDTO findById(Long id);
     public UserDTO createOrUpdate (UserDTO userDTO);
     public void deleteUser(long id);
     public UserDTO findByUsername(String username);

@@ -11,4 +11,7 @@ import java.util.List;
 public interface ChapterRepository extends JpaRepository<Chapter, Long> {
     @Query("select chapter from Chapter chapter where chapter.fictionId = ?1 order by chapter.sort asc")
     List<Chapter> findAllByFictionId(long fictionId);
+
+    @Query("select count(chapter.id) from Chapter chapter where chapter.fictionId = ?1")
+    int countChapterByFictionId(long fictionId);
 }

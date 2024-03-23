@@ -26,18 +26,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable, map, startWith } from 'rxjs';
 import { Chapter } from '../../interface/chapter';
 import { Comment } from '../../interface/comment';
 import { Fiction } from '../../interface/fiction';
 import { Tag } from '../../interface/tag';
 import { TagFiction } from '../../interface/tag-fiction';
+import { ChapterService } from '../../service/chapter.service';
 import { FictionService } from '../../service/fiction.service';
-import { S3Service } from '../../service/s3.service';
 import { TagFictionService } from '../../service/tag-fiction.service';
 import { TagService } from '../../service/tag.service';
-import { ChapterService } from '../../service/chapter.service';
+import { UploadService } from '../../service/upload.service';
 
 @Component({
   selector: 'app-admin-fiction-detail-feature',
@@ -55,6 +55,7 @@ import { ChapterService } from '../../service/chapter.service';
     ReactiveFormsModule,
     MatTabsModule,
     MatChipsModule,
+    RouterLink,
   ],
   templateUrl: './admin-fiction-detail-feature.component.html',
   styleUrl: './admin-fiction-detail-feature.component.css',
@@ -67,7 +68,7 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
     private chapterService: ChapterService,
     private tagService: TagService,
     private tagFictionService: TagFictionService,
-    private s3Service: S3Service,
+    private fileUploadService: UploadService,
     public dialog: MatDialog
   ) {}
 
@@ -82,6 +83,8 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
   selectedFile: File | undefined;
 
   fileName = '';
+  avatarPublicId = '';
+
   avatarUrl = '';
   dragging = false;
 
@@ -108,29 +111,12 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
         if (this.fictionById !== null) {
           this.isUpdate = true;
           this.updateFormControls();
-          this.getFictionCover();
           this.comments = this.fictionById.comments || [];
+          this.avatarUrl = this.fictionById.coverUrl || '';
           this.tags = this.fictionById.tags || [];
-          this.loadCommentsWithAvatarUrls();
           this.getAvailableTags();
         }
       });
-    }
-  }
-
-  loadCommentsWithAvatarUrls() {
-    this.comments.forEach((comment, index) => {
-      this.s3Service.getFileUrl(comment.user.avatarUrl).subscribe((url) => {
-        this.comments[index].user.avatarUrl = url;
-      });
-    });
-  }
-
-  getFictionCover() {
-    if (this.fictionById) {
-      this.s3Service
-        .getFileUrl(this.fictionById?.coverUrl)
-        .subscribe((url) => (this.avatarUrl = url));
     }
   }
 
@@ -163,6 +149,7 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
       countView: 0,
       userId: 134,
       coverUrl: this.fileName,
+      coverPublicId: this.avatarPublicId,
     };
     this.fictionService
       .createFiction(newFiction)
@@ -175,12 +162,15 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
       name: this.name.value,
       status: this.status.value,
       description: this.description.value,
-      countView: 0,
+      countView: this.fictionById?.countView ? this.fictionById?.countView : 0,
       userId: 134,
       coverUrl:
         this.isUpdateFile && this.fileName
           ? this.fileName
           : this.fictionById?.coverUrl || '',
+      coverPublicId: this.fictionById?.coverPublicId
+        ? this.fictionById?.coverPublicId
+        : '',
     };
     this.fictionService
       .updateFiction(updateFiction)
@@ -196,15 +186,17 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
 
   uploadFileAndSave() {
     if (this.selectedFile) {
-      this.s3Service.uploadFile(this.selectedFile).subscribe((fName) => {
-        this.fileName = fName;
-        this.avatarUrl = fName;
-        if (this.fictionById) {
-          this.updateFiction();
-        } else {
-          this.createFiction();
-        }
-      });
+      this.fileUploadService
+        .uploadFile(this.selectedFile)
+        .subscribe((responseUpload: any) => {
+          this.fileName = responseUpload.url;
+          this.avatarPublicId = responseUpload.public_id;
+          if (this.fictionById) {
+            this.updateFiction();
+          } else {
+            this.createFiction();
+          }
+        });
     } else {
       console.log('No file selected');
     }

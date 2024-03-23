@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,30 +38,40 @@ public class UserServiceImplement implements UserService {
     }
 
     @Override
-    public Optional<UserDTO> findById(Long id) {
-        Optional<User> userById = userRepository.findById(id);
-        return userById.map(user -> modelMapper.map(user, UserDTO.class));
+    public UserDTO findById(Long id) {
+        return modelMapper.map(userRepository.findById(id), UserDTO.class);
     }
 
     @Override
     public UserDTO createOrUpdate(UserDTO userDTO) {
-        User user = modelMapper.map(userDTO, User.class);
-        userRepository.save(user);
+        userRepository.save(modelMapper.map(userDTO, User.class));
         return userDTO;
     }
 
     @Override
     public void deleteUser(long id) {
-        Optional<User> userOptionById = userRepository.findById(id);
-        if (userOptionById.isPresent()) {
-//            userOptionById.map(user -> s3UploadFileService.deleteFile(user.getAvatarUrl()));
+        UserDTO userDTO = findById(id);
+        if (isUserPresent(userDTO)) {
+            deleteAvatar(userDTO.getAvatarPublicId());
+            userRepository.deleteById(id);
         }
-        userRepository.deleteById(id);
     }
 
     @Override
     public UserDTO findByUsername(String username) {
         User userbByUsername = userRepository.findByUsername(username);
         return modelMapper.map(userbByUsername, UserDTO.class);
+    }
+
+    public boolean isUserPresent(UserDTO user) {
+        return user != null;
+    }
+
+    public void deleteAvatar(String publicId) {
+        try {
+            fileUploadService.deleteFile(publicId);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

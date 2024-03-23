@@ -1,0 +1,21 @@
+.example-form {
+  min-width: 150px;
+  width: 80%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+h2 {
+  text-align: center;
+}
+
+.wrapper-chapter {
+  display: flex;
+  justify-content: center;
+}

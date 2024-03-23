@@ -4,6 +4,7 @@ import { AdminFictionDetailFeatureComponent } from './component/admin-fiction-de
 import { AdminFictionFeatureComponent } from './component/admin-fiction-feature/admin-fiction-feature.component';
 import { AdminTagFeatureComponent } from './component/admin-tag-feature/admin-tag-feature.component';
 import { AdminUserFeatureComponent } from './component/admin-user-feature/admin-user-feature.component';
+import { AdminChapterFeatureComponent } from './component/admin-chapter-feature/admin-chapter-feature.component';
 
 export const routes: Routes = [
   {
@@ -29,5 +30,13 @@ export const routes: Routes = [
   {
     path: 'admin/fiction/update/:id',
     component: AdminFictionDetailFeatureComponent,
+  },
+  {
+    path: 'admin/fiction/update/:fictionId/chapter/create',
+    component: AdminChapterFeatureComponent,
+  },
+  {
+    path: 'admin/fiction/update/:fictionId/chapter/update/:id',
+    component: AdminChapterFeatureComponent,
   },
 ];

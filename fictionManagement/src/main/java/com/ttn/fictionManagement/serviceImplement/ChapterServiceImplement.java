@@ -53,4 +53,9 @@ public class ChapterServiceImplement implements ChapterService {
         List<Chapter> chaptersByFictionId = chapterRepository.findAllByFictionId(id);
         return chaptersByFictionId.stream().map(chapter -> modelMapper.map(chapter, ChapterDTO.class)).collect(Collectors.toList());
     }
+
+    @Override
+    public int countChapterByFictionId(long fictionId) {
+        return chapterRepository.countChapterByFictionId(fictionId);
+    }
 }

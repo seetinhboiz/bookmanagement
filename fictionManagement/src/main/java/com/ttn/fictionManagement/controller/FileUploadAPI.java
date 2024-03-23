@@ -1,6 +1,8 @@
 package com.ttn.fictionManagement.controller;
 
 import com.ttn.fictionManagement.service.FileUploadService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,30 +18,36 @@ import java.util.Map;
 public class FileUploadAPI {
     private final FileUploadService fileUploadService;
 
+    private final Logger logger = LoggerFactory.getLogger(UserAPI.class);
+
     @Autowired
     public FileUploadAPI(FileUploadService fileUploadService) {
         this.fileUploadService = fileUploadService;
     }
 
-    @GetMapping("/{publicId}")
-    public ResponseEntity<String> getFileUrl(@PathVariable String publicId) throws Exception {
-        return new ResponseEntity<>(fileUploadService.getFileUrl(publicId), HttpStatus.OK);
-    }
-
     @PostMapping("/upload")
-    public ResponseEntity<Map> uploadFile(@RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
-        Map data = fileUploadService.uploadFile(file);
-        return new ResponseEntity<>(data, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteFile(@RequestParam String fileUrl) {
+    public ResponseEntity<Map> uploadFile(@RequestParam(value = "file", required = false) MultipartFile file) {
         try {
-            fileUploadService.deleteFile(fileUrl);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            Map data = fileUploadService.uploadFile(file);
+            return new ResponseEntity<>(data, HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
+            loggerException("uploading", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @DeleteMapping("/delete/{publicId}")
+    public ResponseEntity<String> deleteFile(@PathVariable String publicId) {
+        try {
+            fileUploadService.deleteFile(publicId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            loggerException("deleting", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public void loggerException(String action, Exception e) {
+        logger.error("Error occurred while " + action + " file", e);
     }
 }

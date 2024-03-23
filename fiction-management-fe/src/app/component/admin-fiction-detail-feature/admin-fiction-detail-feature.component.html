@@ -145,7 +145,13 @@
         <div class="wrapper-chapter mt-30px" *ngIf="isUpdate">
           <div class="wrapper-button">
             <div class="wrapper-button-align">
-              <button mat-fab extended color="primary" class="button-add">
+              <button
+                mat-fab
+                extended
+                color="primary"
+                class="button-add"
+                routerLink="chapter/create"
+              >
                 <mat-icon>add</mat-icon>
                 New chapter
               </button>
@@ -170,6 +176,7 @@
                   color="primary"
                   aria-label="Example icon-button with a heart icon"
                   class="icon-button"
+                  routerLink="chapter/update/{{ chapter.id }}"
                 >
                   <mat-icon>edit</mat-icon>
                 </button>

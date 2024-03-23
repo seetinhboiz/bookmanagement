@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,16 +47,8 @@ public class FictionServiceImplement implements FictionService {
     @Override
     public List<FictionDetailDTO> findAll() {
         List<Fiction> fictions = fictionRepository.findAll(Sort.by(Sort.Direction.ASC, ("name")));
-        List<FictionDetailDTO> fictionDetailDTOS = new ArrayList<>();
 
-        for (Fiction fiction : fictions) {
-            FictionDetailDTO fictionDetailDTO = modelMapper.map(fiction, FictionDetailDTO.class);
-            Optional<UserDTO> userDTO = userService.findById(Long.valueOf(fiction.getUserId()));
-            fictionDetailDTO.setUser(modelMapper.map(userDTO, UserDTO.class));
-            fictionDetailDTOS.add(fictionDetailDTO);
-        }
-
-        return fictionDetailDTOS;
+        return modelMapListFictionDetailDTO(fictions);
     }
 
     @Override
@@ -63,30 +56,28 @@ public class FictionServiceImplement implements FictionService {
         Optional<Fiction> fictionOptional = fictionRepository.findById(id);
         FictionDetailDTO fictionDetailDTO = modelMapper.map(fictionOptional, FictionDetailDTO.class);
 
-        Optional<UserDTO> userDTO = userService.findById(Long.valueOf(fictionDetailDTO.getUserId()));
-        List<ChapterDTO> chapterDTOS = chapterService.findAllByFictionId(id);
-        List<CommentDetailDTO> commentByFicitonIds = commentService.findAllByFictionId(id);
+        UserDTO userDTO = findUser(fictionDetailDTO.getUserId());
 
-        List<Long> idTags = tagFictionService.findAllByFictionId(id);
-        List<TagDTO> tagDTOS = new ArrayList<>();
-
-        for (Long idTag : idTags) {
-            TagDTO tagDTO = modelMapper.map(tagService.findById(idTag), TagDTO.class);
-            tagDTOS.add(tagDTO);
-        }
+        List<ChapterDTO> chapterDTOs = findAllChapterByFictionId(id);
+        List<CommentDetailDTO> commentDetailDTOs = findAllCommentByFictionId(id);
+        List<TagDTO> tagDTOs = findAllTagByFictionId(id);
 
         fictionDetailDTO.setUser(modelMapper.map(userDTO, UserDTO.class));
-        fictionDetailDTO.setChapters(chapterDTOS);
-        fictionDetailDTO.setComments(commentByFicitonIds);
-        fictionDetailDTO.setTags(tagDTOS);
+        fictionDetailDTO.setChapters(chapterDTOs);
+        fictionDetailDTO.setComments(commentDetailDTOs);
+        fictionDetailDTO.setTags(tagDTOs);
 
         Fiction fiction = modelMapper.map(fictionOptional, Fiction.class);
-        fiction.setCountView(fiction.getCountView() + 1);
-        fictionRepository.save(fiction);
+        saveCountView(fiction);
 
         fictionDetailDTO.setCountView(fictionDetailDTO.getCountView() + 1);
 
         return fictionDetailDTO;
+    }
+
+    public void saveCountView(Fiction fiction) {
+        fiction.setCountView(fiction.getCountView() + 1);
+        fictionRepository.save(fiction);
     }
 
     @Override
@@ -97,10 +88,64 @@ public class FictionServiceImplement implements FictionService {
 
     @Override
     public void deleteFiction(long id) {
-        Optional<Fiction> fictionById = fictionRepository.findById(id);
-        if (fictionById.isPresent()) {
-//            fictionById.map(fiction -> s3UploadFileService.deleteFile(fiction.getCoverUrl()));
+        Fiction fictionById = modelMapper.map(fictionRepository.findById(id), Fiction.class);
+        if (isFictionPresent(fictionById)) {
+            deleteCover(fictionById.getCoverPublicId());
+            fictionRepository.deleteById(id);
         }
-        fictionRepository.deleteById(id);
+    }
+
+    public List<FictionDetailDTO> modelMapListFictionDetailDTO(List<Fiction> fictions) {
+        List<FictionDetailDTO> fictionDetailDTOS = new ArrayList<>();
+
+        for (Fiction fiction : fictions) {
+            FictionDetailDTO fictionDetailDTO = modelMapFictionDetailDTO(fiction);
+            UserDTO userDTO = findUser(fiction.getUserId());
+
+            fictionDetailDTO.setUser(modelMapper.map(userDTO, UserDTO.class));
+            fictionDetailDTOS.add(fictionDetailDTO);
+        }
+
+        return fictionDetailDTOS;
+    }
+
+    public FictionDetailDTO modelMapFictionDetailDTO(Fiction fiction) {
+        return modelMapper.map(fiction, FictionDetailDTO.class);
+    }
+
+    public UserDTO findUser(long id) {
+        return userService.findById(id);
+    }
+
+    public boolean isFictionPresent(Fiction fiction) {
+        return fiction != null;
+    }
+
+    public void deleteCover(String publicId) {
+        try {
+            fileUploadService.deleteFile(publicId);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<ChapterDTO> findAllChapterByFictionId(long fictionId) {
+        return chapterService.findAllByFictionId(fictionId);
+    }
+
+    public List<CommentDetailDTO> findAllCommentByFictionId(long fictionId) {
+        return commentService.findAllByFictionId(fictionId);
+    }
+
+    public List<TagDTO> findAllTagByFictionId(long fictionId) {
+        List<Long> idTags = tagFictionService.findAllByFictionId(fictionId);
+        List<TagDTO> tagDTOS = new ArrayList<>();
+
+        for (Long idTag : idTags) {
+            TagDTO tagDTO = modelMapper.map(tagService.findById(idTag), TagDTO.class);
+            tagDTOS.add(tagDTO);
+        }
+
+        return tagDTOS;
     }
 }

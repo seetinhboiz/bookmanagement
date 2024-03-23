@@ -36,7 +36,7 @@ public class UserAPI {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<UserDTO>> getById(@PathVariable long id) {
+    public ResponseEntity<UserDTO> getById(@PathVariable long id) {
         try {
             return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
         } catch (Exception e) {
@@ -59,7 +59,7 @@ public class UserAPI {
     @PutMapping("/update/{id}")
     public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO user, @PathVariable long id) {
         try {
-            if (userService.findById(id).isPresent()) {
+            if (userService.findById(id) != null) {
                 userService.createOrUpdate(user);
                 return new ResponseEntity<>(user, HttpStatus.OK);
             } else {
@@ -74,8 +74,8 @@ public class UserAPI {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable long id) {
         try {
-            Optional<UserDTO> user = userService.findById(id);
-            if (user.isPresent()) {
+            UserDTO user = userService.findById(id);
+            if (user != null) {
                 userService.deleteUser(id);
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {

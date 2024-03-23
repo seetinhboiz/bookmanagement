@@ -24,10 +24,6 @@ public class FileUploadServiceImplement implements FileUploadService {
         this.cloudinary = cloudinary;
     }
 
-    @Override
-    public String getFileUrl(String publicId) throws Exception {
-        return "";
-    }
 
     @Override
     public Map uploadFile(MultipartFile multipartFile) {
@@ -40,6 +36,7 @@ public class FileUploadServiceImplement implements FileUploadService {
     }
 
     @Override
-    public void deleteFile(String imageUrl) {
+    public void deleteFile(String publicId) throws IOException {
+        cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
     }
 }

@@ -1,17 +1,12 @@
+import { provideHttpClient } from '@angular/common/http';
 import {
   bootstrapApplication,
   provideProtractorTestingSupport,
 } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
-import { AppComponent } from './app/app.component';
-import { provideRouter } from '@angular/router';
-import { routes } from './app/app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideHttpClient } from '@angular/common/http';
-
-// bootstrapApplication(AppComponent, appConfig).catch((err) =>
-//   console.error(err)
-// );
+import { provideRouter } from '@angular/router';
+import { AppComponent } from './app/app.component';
+import { routes } from './app/app.routes';
 
 bootstrapApplication(AppComponent, {
   providers: [
