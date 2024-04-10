@@ -1,0 +1,24 @@
+.wrapper-login {
+    display: flex;
+    align-items: center;
+    height: 80vh;
+}
+
+mat-tab-group {
+    width: 30%;
+    margin: auto;
+    padding: 40px;
+    border: 1px solid #FF7235;
+    border-radius: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0;
+}
+
+.align-right {
+    display: flex;
+    justify-content: right;
+}

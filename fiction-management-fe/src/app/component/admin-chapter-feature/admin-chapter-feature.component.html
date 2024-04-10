@@ -3,17 +3,35 @@
   <form class="example-form">
     <mat-form-field class="example-full-width">
       <mat-label>Chapter name</mat-label>
-      <input matInput placeholder="" />
+      <input matInput placeholder="" [formControl]="name" />
     </mat-form-field>
-
-    <!-- <mat-form-field class="example-full-width">
-      <mat-label>Chapter content</mat-label>
-      <textarea matInput placeholder=""></textarea>
-    </mat-form-field> -->
 
     <editor
       [init]="editorConfig"
       apiKey="c1lh9z9b2dnvq9oveb5593hyygqu17vw84q9ijxo96zhwc8d"
+      [formControl]="content"
     ></editor>
   </form>
+</div>
+<div class="wrapper-button">
+  <button
+    mat-fab
+    extended
+    color="basic"
+    class="button-add button-action-chapter"
+    (click)="goBack()"
+  >
+    <mat-icon>close</mat-icon>
+    Cancel
+  </button>
+  <button
+    mat-fab
+    extended
+    color="primary"
+    class="button-add button-action-chapter"
+    (click)="onSubmit()"
+  >
+    <mat-icon>add</mat-icon>
+    Save
+  </button>
 </div>

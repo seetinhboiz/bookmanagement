@@ -19,3 +19,18 @@ h2 {
   display: flex;
   justify-content: center;
 }
+
+.wrapper-button {
+  display: flex;
+  margin: 40px 0;
+  justify-content: center;
+}
+
+.wrapper-button-align {
+  width: 100%;
+  text-align: right;
+}
+
+.button-action-chapter {
+  margin: 0 20px;
+}

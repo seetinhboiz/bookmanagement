@@ -1,0 +1,34 @@
+<div class="wrapper-login">
+  <mat-tab-group>
+    <mat-tab label="SIGN IN">
+      <form>
+        <mat-form-field class="example-full-width">
+          <mat-label>Username</mat-label>
+          <input matInput [formControl]="username"/>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" [formControl]="password"/>
+        </mat-form-field>
+      </form>
+      <div class="align-right">
+        <button mat-flat-button color="primary" (click)="onLogin()">Sign in</button>
+      </div>
+    </mat-tab>
+    <mat-tab label="SIGN UP">
+      <form>
+        <mat-form-field class="example-full-width">
+          <mat-label>Username</mat-label>
+          <input matInput />
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" />
+        </mat-form-field>
+      </form>
+      <div class="align-right">
+        <button mat-flat-button color="primary">Sign up</button>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

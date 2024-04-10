@@ -34,12 +34,11 @@
 
 .user-info {
     display: flex;
-    margin-right: 50px;
     align-items: center;
-    
 }
 
-.user-info:hover { 
+.user-info:hover,
+.log-out:hover { 
     cursor: pointer;
     opacity: 0.8;
 }
@@ -62,4 +61,18 @@
 .devider {
   margin-bottom: 10px;
   opacity: 0.2;
+}
+
+.wrapper-right {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.log-out {
+  color: #FF4F03;
+}
+
+.wrapper-right-item {
+  margin: 0 10px;
 }

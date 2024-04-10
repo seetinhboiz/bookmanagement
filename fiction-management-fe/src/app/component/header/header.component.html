@@ -16,16 +16,14 @@
     </div>
   </div>
 
-  <div class="user-info">
-    <img src="https://shorturl.at/uyLNR" alt="avatar" class="avatar" />
-    <span class="user-name"
-      ><span>UserUserUser</span
-      ><mat-icon
-        aria-hidden="false"
-        aria-label="Example home icon"
-        fontIcon="expand_more"
-      ></mat-icon
-    ></span>
+  <div class="wrapper-right">
+    <div class="user-info wrapper-right-item">
+      <img src="https://shorturl.at/uyLNR" alt="avatar" class="avatar" />
+      <span class="user-name"><span>{{ username }}</span></span>
+    </div>
+    <div>
+      <span class="log-out wrapper-right-item" (click)="onLogout()">Đăng xuất</span>
+    </div>
   </div>
 </nav>
 <hr class="devider" />
