@@ -13,7 +13,7 @@ import { AuthService } from '../../service/auth.service';
 export class HeaderComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
-  username = localStorage.getItem('username')
+  username = typeof localStorage !== 'undefined' ? localStorage.getItem('username') : ''
 
   onLogout() {
     this.authService.logout();

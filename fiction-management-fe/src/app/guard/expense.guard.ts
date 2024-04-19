@@ -1,24 +1,27 @@
 import { Injectable, inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../service/auth.service';
+import { CanActivate, CanActivateFn, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ExpenseGuard {
+export class ExpenseGuard implements CanActivate {
   constructor(private router: Router) {}
 
-  checkLogin() {
-    const isLogin = localStorage.getItem('isUserLoggedIn');
-    if (isLogin !== null && isLogin === 'true') {
-      this.router.navigateByUrl('/home');
-      return true;
+  canActivate(): boolean {
+    if (typeof localStorage !== 'undefined') {
+      const isUserLoggedIn = localStorage.getItem('isUserLoggedIn');
+      console.log('Is user logged in:', isUserLoggedIn);
+      if (isUserLoggedIn === 'true') {
+        return true;
+      } else {
+        this.router.navigateByUrl('/login');
+        return false;
+      }
     }
-    this.router.navigateByUrl('/login');
     return false;
   }
 }
 
 export const expenseGuard: CanActivateFn = (route, state) => {
-  return inject(ExpenseGuard).checkLogin();
+  return inject(ExpenseGuard).canActivate();
 };
