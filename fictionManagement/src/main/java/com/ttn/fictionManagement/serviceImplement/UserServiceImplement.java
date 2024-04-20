@@ -8,11 +8,11 @@ import com.ttn.fictionManagement.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,14 +21,17 @@ public class UserServiceImplement implements UserService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final FileUploadService fileUploadService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserServiceImplement(UserRepository userRepository,
                                 ModelMapper modelMapper,
-                                FileUploadService fileUploadService) {
+                                FileUploadService fileUploadService,
+                                PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.fileUploadService = fileUploadService;
         this.modelMapper = modelMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -44,6 +47,9 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public UserDTO createOrUpdate(UserDTO userDTO) {
+        if (userDTO.getId() == null) {
+            userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
         userRepository.save(modelMapper.map(userDTO, User.class));
         return userDTO;
     }
@@ -61,6 +67,11 @@ public class UserServiceImplement implements UserService {
     public UserDTO findByUsername(String username) {
         User userbByUsername = userRepository.findByUsername(username);
         return modelMapper.map(userbByUsername, UserDTO.class);
+    }
+
+    @Override
+    public boolean checkPassword(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 
     public boolean isUserPresent(UserDTO user) {

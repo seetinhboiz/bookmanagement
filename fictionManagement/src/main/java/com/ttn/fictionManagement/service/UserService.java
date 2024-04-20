@@ -11,4 +11,5 @@ public interface UserService {
     public UserDTO createOrUpdate (UserDTO userDTO);
     public void deleteUser(long id);
     public UserDTO findByUsername(String username);
+    public boolean checkPassword(String rawPassword, String encodedPassword);
 }
