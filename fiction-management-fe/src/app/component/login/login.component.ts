@@ -4,8 +4,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
-import { AuthService } from '../../service/auth.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -22,18 +22,28 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-  ) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   username = new FormControl();
   password = new FormControl();
 
+  // onLogin() {
+  //   this.authService.login(this.username.value, this.password.value);
+
+  //   if (localStorage.getItem('isUserLoggedIn') === 'true') {
+  //     this.router.navigate(['/home']);
+  //   }
+  // }
+
   onLogin() {
-    this.authService.login(this.username.value, this.password.value);
-    if (localStorage.getItem('isUserLoggedIn') === 'true') {
-      this.router.navigate(['/home']);
-    }
+    this.authService
+      .login(this.username.value, this.password.value)
+      .subscribe((isLoggedIn: boolean) => {
+        if (isLoggedIn) {
+          this.router.navigate(['/home']);
+        } else {
+          console.log('Login failed');
+        }
+      });
   }
 }

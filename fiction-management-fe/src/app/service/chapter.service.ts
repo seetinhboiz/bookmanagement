@@ -21,7 +21,6 @@ export class ChapterService {
   }
 
   createChapter(chapter: Chapter): Observable<Chapter> {
-    console.log('this function has called');
     return this.http.post<Chapter>(`${this.urlChapter}/create`, chapter);
   }
 

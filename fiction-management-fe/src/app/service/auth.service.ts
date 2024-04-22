@@ -1,33 +1,66 @@
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { User } from '../interface/user';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor() {}
+  constructor(private http: HttpClient) {}
+
+  urlLogin = 'http://localhost:8080/api/login';
 
   isUserLoggedIn: boolean = false;
   loginStatusChange: Subject<boolean> = new Subject<boolean>();
 
-  login(userName: string, password: string) {
-    this.isUserLoggedIn = userName === 'admin' && password === '123';
+  // login(userNameInput: string, passwordInput: string) {
+  //   const user: User = { username: userNameInput, password: passwordInput };
 
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem(
-        'isUserLoggedIn',
-        this.isUserLoggedIn ? 'true' : 'false'
+  //     return this.http
+  //     .post<User>(this.urlLogin, user, { observe: 'response' })
+  //     .subscribe((response) => {
+  //       this.loginStatusChange.next(this.isUserLoggedIn);
+  //       this.isUserLoggedIn = response.status === 200 ? true : false;
+
+  //       if (typeof localStorage !== 'undefined') {
+  //         localStorage.setItem(
+  //           'isUserLoggedIn',
+  //           this.isUserLoggedIn ? 'true' : 'false'
+  //         );
+
+  //         if (this.isUserLoggedIn) {
+  //           localStorage.setItem('username', userNameInput);
+  //         } else {
+  //           console.log('Loggin failed');
+  //         }
+  //       }
+  //     });
+  // }
+
+  login(userNameInput: string, passwordInput: string): Observable<boolean> {
+    const user: User = { username: userNameInput, password: passwordInput };
+
+    return this.http
+      .post<User>(this.urlLogin, user, { observe: 'response' })
+      .pipe(
+        map((response: HttpResponse<User>) => response.status === 200),
+        tap((isLoggedIn) => {
+          this.isUserLoggedIn = isLoggedIn;
+          this.loginStatusChange.next(this.isUserLoggedIn);
+
+          if (typeof localStorage !== 'undefined') {
+            localStorage.setItem(
+              'isUserLoggedIn',
+              isLoggedIn ? 'true' : 'false'
+            );
+            if (isLoggedIn) {
+              localStorage.setItem('username', userNameInput);
+            }
+          }
+        })
       );
-
-      if (this.isUserLoggedIn) {
-        console.log('Loggin successed');
-        localStorage.setItem('username', userName);
-      } else {
-        console.log('Loggin failed');
-      }
-    }
-
-    this.loginStatusChange.next(this.isUserLoggedIn);
   }
 
   logout(): void {
