@@ -1,0 +1,58 @@
+.wrapper-fiction {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.fiction-list {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  width: 80%;
+}
+
+.ficiton {
+  width: 300px;
+  margin: 20px 0;
+  height: 550px;
+}
+
+.example-card {
+  width: 100%;
+  height: 100%;
+}
+
+mat-card-header {
+  border-bottom: solid 1px;
+}
+
+mat-card-actions {
+  border-top: solid 1px;
+}
+
+mat-card-header,
+mat-card-actions {
+  display: flex;
+  justify-content: center;
+}
+
+mat-card-content {
+  max-height: 100px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.wrapper-img {
+  display: flex;
+  align-items: center;
+  height: 400px;
+}
+
+img {
+  width: 100%;
+  max-width: 300px;
+  max-height: 400px;
+  object-fit: contain;
+}

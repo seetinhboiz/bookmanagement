@@ -10,15 +10,15 @@
       />
     </a>
     <div class="wrapper-navbar-item">
-      <span class="navbar-item">Khám phá</span>
-      <span class="navbar-item">Cộng đồng</span>
+      <!-- <span class="navbar-item">Khám phá</span>
+      <span class="navbar-item">Cộng đồng</span> -->
       <span class="navbar-item" routerLink="/admin">ADMIN</span>
     </div>
   </div>
 
   <div class="wrapper-right">
     <div class="user-info wrapper-right-item">
-      <img src="https://shorturl.at/uyLNR" alt="avatar" class="avatar" />
+      <img [src]="avatar" class="avatar" />
       <span class="user-name"><span>{{ username }}</span></span>
     </div>
     <div>

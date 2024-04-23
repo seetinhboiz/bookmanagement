@@ -1,13 +1,28 @@
 import { Component } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { RouterModule, RouterOutlet } from '@angular/router';
-import { FooterComponent } from '../footer/footer.component';
-import { HeaderComponent } from '../header/header.component';
+import { FictionService } from '../../service/fiction.service';
+import { CommonModule } from '@angular/common';
+import { Fiction } from '../../interface/fiction';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, HeaderComponent, FooterComponent],
+  imports: [RouterOutlet, RouterModule, MatButtonModule, MatCardModule, CommonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
-export class HomeComponent {}
+export class HomeComponent {
+  constructor(private ficitonService: FictionService) {
+    this.getListFiction();
+  }
+
+  fictions: Fiction[] = [];
+
+  getListFiction() {
+    this.ficitonService.getFictions().subscribe((listFiciton) => {
+      this.fictions = listFiciton
+    }); 
+  }
+}

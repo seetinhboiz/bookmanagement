@@ -1,1 +1,27 @@
 <router-outlet></router-outlet>
+<div class="wrapper-fiction">
+  <div class="fiction-list">
+      <div class="ficiton" *ngFor="let fiction of fictions">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>{{ fiction.name }}</mat-card-title>
+          </mat-card-header>
+          <div class="wrapper-img">
+              <img
+                mat-card-image
+                [src]="fiction.coverUrl"
+                alt="Photo"
+              />
+          </div>
+          <mat-card-content>
+            <p>
+              {{ fiction.description }}
+            </p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button>CHI TIẾT</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+  </div>
+</div>

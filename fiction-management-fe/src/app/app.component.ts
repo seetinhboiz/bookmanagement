@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './component/header/header.component';
 import { FooterComponent } from './component/footer/footer.component';
@@ -35,5 +35,12 @@ export class AppComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.loginSubscription.unsubscribe();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload() {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.clear();
+    }
   }
 }

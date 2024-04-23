@@ -27,14 +27,6 @@ export class LoginComponent {
   username = new FormControl();
   password = new FormControl();
 
-  // onLogin() {
-  //   this.authService.login(this.username.value, this.password.value);
-
-  //   if (localStorage.getItem('isUserLoggedIn') === 'true') {
-  //     this.router.navigate(['/home']);
-  //   }
-  // }
-
   onLogin() {
     this.authService
       .login(this.username.value, this.password.value)

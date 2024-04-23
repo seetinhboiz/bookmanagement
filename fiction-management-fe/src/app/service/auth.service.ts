@@ -15,30 +15,6 @@ export class AuthService {
   isUserLoggedIn: boolean = false;
   loginStatusChange: Subject<boolean> = new Subject<boolean>();
 
-  // login(userNameInput: string, passwordInput: string) {
-  //   const user: User = { username: userNameInput, password: passwordInput };
-
-  //     return this.http
-  //     .post<User>(this.urlLogin, user, { observe: 'response' })
-  //     .subscribe((response) => {
-  //       this.loginStatusChange.next(this.isUserLoggedIn);
-  //       this.isUserLoggedIn = response.status === 200 ? true : false;
-
-  //       if (typeof localStorage !== 'undefined') {
-  //         localStorage.setItem(
-  //           'isUserLoggedIn',
-  //           this.isUserLoggedIn ? 'true' : 'false'
-  //         );
-
-  //         if (this.isUserLoggedIn) {
-  //           localStorage.setItem('username', userNameInput);
-  //         } else {
-  //           console.log('Loggin failed');
-  //         }
-  //       }
-  //     });
-  // }
-
   login(userNameInput: string, passwordInput: string): Observable<boolean> {
     const user: User = { username: userNameInput, password: passwordInput };
 
