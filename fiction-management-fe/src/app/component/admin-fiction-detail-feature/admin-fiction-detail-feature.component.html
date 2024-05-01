@@ -221,16 +221,16 @@
         <div class="wrapper-comment mt-30px" *ngIf="isUpdate">
           <div class="wrapper-comment" *ngFor="let comment of comments">
             <div class="comment">
-              <div class="avatar-wrapper">
+              <div class="avatar-wrapper" *ngIf="comment.user">
                 <img [src]="comment.user.avatarUrl" alt="" class="avatar" />
               </div>
-              <div class="comment-detail">
+              <div class="comment-detail" *ngIf="comment.user">
                 <div class="comment-username">{{ comment.user.username }}</div>
                 <div class="comment-content">{{ comment.content }}</div>
               </div>
             </div>
-            <div class="comment-action">
-              <button mat-button color="warn">Delete</button>
+            <div class="comment-action" *ngIf="comment.id !== undefined">
+              <button mat-button color="warn" (click)="onDeleteComment(comment.id)">Delete</button>
             </div>
           </div>
         </div>

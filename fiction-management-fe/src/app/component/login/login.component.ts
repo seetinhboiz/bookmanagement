@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Router } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
+import { CommunicationService } from '../../service/communication.service';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,11 @@ import { AuthService } from '../../service/auth.service';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private communicationService: CommunicationService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   username = new FormControl();
   password = new FormControl();
@@ -33,6 +38,7 @@ export class LoginComponent {
       .subscribe((isLoggedIn: boolean) => {
         if (isLoggedIn) {
           this.router.navigate(['/home']);
+          this.communicationService.triggerReload();
         } else {
           console.log('Login failed');
         }

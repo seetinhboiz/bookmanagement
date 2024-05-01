@@ -5,7 +5,6 @@ import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
 import { Fiction } from '../../interface/fiction';
 import { FictionService } from '../../service/fiction.service';
-import { S3Service } from '../../service/s3.service';
 
 @Component({
   selector: 'app-admin-fiction-feature',
@@ -15,7 +14,7 @@ import { S3Service } from '../../service/s3.service';
   styleUrl: './admin-fiction-feature.component.css',
 })
 export class AdminFictionFeatureComponent {
-  constructor(private fictionService: FictionService, private s3Service: S3Service) {
+  constructor(private fictionService: FictionService) {
     this.getAllFictions();
   }
 

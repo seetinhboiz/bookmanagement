@@ -46,7 +46,11 @@ public class FictionServiceImplement implements FictionService {
 
     @Override
     public List<FictionDetailDTO> findAll() {
-        List<Fiction> fictions = fictionRepository.findAll(Sort.by(Sort.Direction.ASC, ("name")));
+        List<Fiction> fictions = fictionRepository.findAll();
+
+        if (fictions.isEmpty()) {
+            throw new RuntimeException("Fiction list is null");
+        }
 
         return modelMapListFictionDetailDTO(fictions);
     }
@@ -93,6 +97,11 @@ public class FictionServiceImplement implements FictionService {
             deleteCover(fictionById.getCoverPublicId());
             fictionRepository.deleteById(id);
         }
+    }
+
+    @Override
+    public List<FictionDetailDTO> findAllByUserId(int id) {
+        return modelMapListFictionDetailDTO(this.fictionRepository.getFictionsByUserId(id));
     }
 
     public List<FictionDetailDTO> modelMapListFictionDetailDTO(List<Fiction> fictions) {

@@ -33,11 +33,14 @@ import { Comment } from '../../interface/comment';
 import { Fiction } from '../../interface/fiction';
 import { Tag } from '../../interface/tag';
 import { TagFiction } from '../../interface/tag-fiction';
+import { User } from '../../interface/user';
 import { ChapterService } from '../../service/chapter.service';
+import { CommentService } from '../../service/comment.service';
 import { FictionService } from '../../service/fiction.service';
 import { TagFictionService } from '../../service/tag-fiction.service';
 import { TagService } from '../../service/tag.service';
 import { UploadService } from '../../service/upload.service';
+import { UserService } from '../../service/user.service';
 
 @Component({
   selector: 'app-admin-fiction-detail-feature',
@@ -60,7 +63,7 @@ import { UploadService } from '../../service/upload.service';
   templateUrl: './admin-fiction-detail-feature.component.html',
   styleUrl: './admin-fiction-detail-feature.component.css',
 })
-export class AdminFictionDetailFeatureComponent implements OnInit {
+export class AdminFictionDetailFeatureComponent {
   constructor(
     private route: ActivatedRoute,
     private location: Location,
@@ -69,13 +72,13 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
     private tagService: TagService,
     private tagFictionService: TagFictionService,
     private fileUploadService: UploadService,
-    public dialog: MatDialog
-  ) {}
-
-  ngOnInit(): void {
+    private userService: UserService,
+    public dialog: MatDialog,
+    private commentService: CommentService
+  ) {
+    this.getCurrentUser();
     this.getFictionById();
   }
-
   fictionById: Fiction | null = null;
   isUpdate: boolean = false;
 
@@ -94,6 +97,9 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
   // Tag
   tags: Tag[] = [];
   availableTags: Tag[] = [];
+
+  // User
+  currentUser: User | null = null;
 
   // Form Control
   name = new FormControl();
@@ -142,39 +148,46 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
   }
 
   createFiction() {
-    const newFiction: Fiction = {
-      name: this.name.value,
-      status: this.status.value,
-      description: this.description.value,
-      countView: 0,
-      userId: 134,
-      coverUrl: this.fileName,
-      coverPublicId: this.avatarPublicId,
-    };
-    this.fictionService
-      .createFiction(newFiction)
-      .subscribe(() => this.location.back());
+    if (this.currentUser?.id) {
+      console.log('co id ma');
+      const newFiction: Fiction = {
+        name: this.name.value,
+        status: this.status.value,
+        description: this.description.value,
+        countView: 0,
+        userId: this.currentUser?.id,
+        coverUrl: this.fileName,
+        coverPublicId: this.avatarPublicId,
+      };
+      this.fictionService
+        .createFiction(newFiction)
+        .subscribe(() => this.location.back());
+    }
   }
 
   updateFiction() {
-    const updateFiction: Fiction = {
-      id: this.fictionById?.id,
-      name: this.name.value,
-      status: this.status.value,
-      description: this.description.value,
-      countView: this.fictionById?.countView ? this.fictionById?.countView : 0,
-      userId: 134,
-      coverUrl:
-        this.isUpdateFile && this.fileName
-          ? this.fileName
-          : this.fictionById?.coverUrl || '',
-      coverPublicId: this.fictionById?.coverPublicId
-        ? this.fictionById?.coverPublicId
-        : '',
-    };
-    this.fictionService
-      .updateFiction(updateFiction)
-      .subscribe(() => this.location.back());
+    if (this.fictionById?.user?.id != null) {
+      const updateFiction: Fiction = {
+        id: this.fictionById?.id,
+        name: this.name.value,
+        status: this.status.value,
+        description: this.description.value,
+        countView: this.fictionById?.countView
+          ? this.fictionById?.countView
+          : 0,
+        userId: this.fictionById?.user?.id,
+        coverUrl:
+          this.isUpdateFile && this.fileName
+            ? this.fileName
+            : this.fictionById?.coverUrl || '',
+        coverPublicId: this.fictionById?.coverPublicId
+          ? this.fictionById?.coverPublicId
+          : '',
+      };
+      this.fictionService
+        .updateFiction(updateFiction)
+        .subscribe(() => this.location.back());
+    }
   }
 
   onFileSelected(event: any) {
@@ -319,6 +332,23 @@ export class AdminFictionDetailFeatureComponent implements OnInit {
       this.updateFiction();
     } else {
       this.uploadFileAndSave();
+    }
+  }
+
+  onDeleteComment(id: number) {
+    this.commentService.deleteComment(id).subscribe(() => {
+      this.getFictionById();
+    });
+  }
+
+  getCurrentUser() {
+    if (typeof localStorage !== 'undefined') {
+      const username = localStorage.getItem('username');
+      if (username) {
+        this.userService.getUserByUsername(username).subscribe((user) => {
+          this.currentUser = user;
+        });
+      }
     }
   }
 }

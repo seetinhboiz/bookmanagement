@@ -27,11 +27,12 @@ public class FictionAPI {
     @GetMapping("")
     public ResponseEntity<List<FictionDetailDTO>> getAllFictions() {
         try {
-            return new ResponseEntity<>(fictionService.findAll(), HttpStatus.OK);
+            List<FictionDetailDTO> listFiction = fictionService.findAll();
+            return new ResponseEntity<>(listFiction, HttpStatus.OK);
         } catch (Exception e) {
             loggerException("getting", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @GetMapping("/{id}")
@@ -42,6 +43,19 @@ public class FictionAPI {
             loggerException("getting", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<List<FictionDetailDTO>> getByUserId(@PathVariable int id) {
+        try {
+            List<FictionDetailDTO> listFiction = fictionService.findAllByUserId(id);
+            if (listFiction != null) {
+                return new ResponseEntity<>(listFiction, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            loggerException("getting", e);
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("/create")

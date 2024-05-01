@@ -19,13 +19,19 @@ export class FictionService {
     return this.http.get<Fiction>(`${this.urlFiction}/${id}`);
   }
 
+  getFictionByUserId(userId: number): Observable<Fiction[]> {
+    return this.http.get<Fiction[]>(`${this.urlFiction}/user/${userId}`);
+  }
+
   createFiction(fiction: Fiction): Observable<Fiction> {
-    console.log('this function has called');
     return this.http.post<Fiction>(`${this.urlFiction}/create`, fiction);
   }
 
   updateFiction(fiction: Fiction): Observable<Fiction> {
-    return this.http.put<Fiction>(`${this.urlFiction}/update/${fiction.id}`, fiction);
+    return this.http.put<Fiction>(
+      `${this.urlFiction}/update/${fiction.id}`,
+      fiction
+    );
   }
 
   deleteFiction(id: number): Observable<unknown> {

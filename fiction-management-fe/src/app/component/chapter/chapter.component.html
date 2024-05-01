@@ -1,0 +1,9 @@
+<div class="wrapper">
+    <div class="wrapper-chapter">
+        <h2 class="chapter-title">{{ chapterById?.name?.toUpperCase() }}</h2>
+
+        <mat-divider class="chapter-divider"></mat-divider>
+
+        <div class="chapter-content" [innerHTML]="safeHtmlContent"></div>
+    </div>
+</div>

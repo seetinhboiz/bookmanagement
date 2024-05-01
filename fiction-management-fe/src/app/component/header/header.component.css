@@ -30,6 +30,7 @@
 .navbar-item:hover {
   cursor: pointer;
   opacity: 0.6;
+  transition: opacity 0.3s;
 }
 
 .user-info {
@@ -41,6 +42,7 @@
 .log-out:hover { 
     cursor: pointer;
     opacity: 0.8;
+    transition: opacity 0.3s;
 }
 
 .avatar {

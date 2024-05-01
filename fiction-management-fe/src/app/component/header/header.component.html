@@ -10,19 +10,24 @@
       />
     </a>
     <div class="wrapper-navbar-item">
-      <!-- <span class="navbar-item">Khám phá</span>
-      <span class="navbar-item">Cộng đồng</span> -->
       <span class="navbar-item" routerLink="/admin">ADMIN</span>
     </div>
   </div>
 
   <div class="wrapper-right">
-    <div class="user-info wrapper-right-item">
+    <div
+      class="user-info wrapper-right-item"
+      [routerLink]="['/user', user?.id]"
+    >
       <img [src]="avatar" class="avatar" />
-      <span class="user-name"><span>{{ username }}</span></span>
+      <span class="user-name"
+        ><span>{{ username }}</span></span
+      >
     </div>
     <div>
-      <span class="log-out wrapper-right-item" (click)="onLogout()">Đăng xuất</span>
+      <span class="log-out wrapper-right-item" (click)="onLogout()"
+        >Log out</span
+      >
     </div>
   </div>
 </nav>

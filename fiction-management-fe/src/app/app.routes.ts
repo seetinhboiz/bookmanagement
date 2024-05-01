@@ -8,6 +8,9 @@ import { AdminUserFeatureComponent } from './component/admin-user-feature/admin-
 import { HomeComponent } from './component/home/home.component';
 import { LoginComponent } from './component/login/login.component';
 import { ExpenseGuard } from './guard/expense.guard';
+import { FictionDetailComponent } from './component/fiction-detail/fiction-detail.component';
+import { UserProfileComponent } from './component/user-profile/user-profile.component';
+import { ChapterComponent } from './component/chapter/chapter.component';
 
 export const routes: Routes = [
   {
@@ -23,43 +26,58 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminFeatureComponent,
-    canActivate: [ExpenseGuard],
+    // canActivate: [ExpenseGuard],
   },
 
   {
     path: 'admin/tag',
     component: AdminTagFeatureComponent,
-    canActivate: [ExpenseGuard],
+    // canActivate: [ExpenseGuard],
   },
   {
     path: 'admin/user',
     component: AdminUserFeatureComponent,
-    canActivate: [ExpenseGuard],
+    // canActivate: [ExpenseGuard],
   },
   {
     path: 'admin/fiction',
     component: AdminFictionFeatureComponent,
-    canActivate: [ExpenseGuard],
+    // canActivate: [ExpenseGuard],
   },
   {
     path: 'admin/fiction/create',
     component: AdminFictionDetailFeatureComponent,
-    canActivate: [ExpenseGuard],
+    // canActivate: [ExpenseGuard],
   },
   {
     path: 'admin/fiction/update/:id',
     component: AdminFictionDetailFeatureComponent,
-    canActivate: [ExpenseGuard],
+    // canActivate: [ExpenseGuard],
   },
   {
     path: 'admin/fiction/update/:fictionId/chapter/create',
     component: AdminChapterFeatureComponent,
-    canActivate: [ExpenseGuard],
+    // canActivate: [ExpenseGuard],
   },
   {
     path: 'admin/fiction/update/:fictionId/chapter/update/:chapterId',
     component: AdminChapterFeatureComponent,
-    canActivate: [ExpenseGuard],
+    // canActivate: [ExpenseGuard],
+  },
+  {
+    path: 'fiction/:id',
+    component: FictionDetailComponent,
+    // canActivate: [ExpenseGuard],
+  },
+  {
+    path: 'fiction/:fictionId/chapter/:chapterId',
+    component: ChapterComponent,
+    // canActivate: [ExpenseGuard],
+  },
+  {
+    path: 'user/:id',
+    component: UserProfileComponent,
+    // canActivate: [ExpenseGuard],
   },
   {
     path: 'login',

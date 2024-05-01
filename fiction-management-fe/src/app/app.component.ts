@@ -37,10 +37,10 @@ export class AppComponent implements OnDestroy {
     this.loginSubscription.unsubscribe();
   }
 
-  @HostListener('window:beforeunload', ['$event'])
-  onBeforeUnload() {
-    if (typeof localStorage !== 'undefined') {
-      localStorage.clear();
-    }
-  }
+  // @HostListener('window:beforeunload', ['$event'])
+  // onBeforeUnload() {
+  //   if (typeof localStorage !== 'undefined') {
+  //     localStorage.clear();
+  //   }
+  // }
 }

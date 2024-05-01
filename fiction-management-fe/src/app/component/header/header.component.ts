@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { User } from '../../interface/user';
 import { AuthService } from '../../service/auth.service';
+import { CommunicationService } from '../../service/communication.service';
 import { UserService } from '../../service/user.service';
 
 @Component({
@@ -11,18 +14,31 @@ import { UserService } from '../../service/user.service';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit, OnDestroy {
+  private reloadSubscription: Subscription = new Subscription();
+
   constructor(
     private authService: AuthService,
     private router: Router,
-    private userService: UserService
-  ) {
-    this.getUserByUsername();
+    private userService: UserService,
+    private communicationService: CommunicationService
+  ) {}
+
+  ngOnInit() {
+    this.reloadSubscription =
+      this.communicationService.reloadObservable.subscribe(() => {
+        this.reload();
+      });
   }
 
-  username =
-    typeof localStorage !== 'undefined' ? localStorage.getItem('username') : '';
+  ngOnDestroy(): void {
+    this.reloadSubscription.unsubscribe();
+  }
+
+  username = '';
   avatar = '';
+
+  user: User | null = null;
 
   onLogout() {
     this.authService.logout();
@@ -30,12 +46,23 @@ export class HeaderComponent {
   }
 
   getUserByUsername() {
-    if (this.username !== null) {
-      this.userService.getUserByUsername(this.username).subscribe((user) => {
-        if (user.avatarUrl) {
-          this.avatar = user.avatarUrl;
-        }
-      });
+    if (typeof localStorage !== 'undefined') {
+      const storedUsername = localStorage.getItem('username');
+      if (storedUsername) {
+        this.userService.getUserByUsername(storedUsername).subscribe((user) => {
+          this.user = user;
+          if (user?.username) {
+            this.username = user.username;
+          }
+          if (user?.avatarUrl) {
+            this.avatar = user.avatarUrl;
+          }
+        });
+      }
     }
+  }
+
+  reload() {
+    this.getUserByUsername();
   }
 }

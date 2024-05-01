@@ -1,22 +1,55 @@
-.wrapper-button {
+.wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+.wrapper-user {
+  width: 80%;
+}
+
+.wrapper-avatar {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+mat-card {
+  width: 400px;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.mat-mdc-card-header {
   display: flex;
   justify-content: center;
 }
 
-.button-align {
-  display: flex;
-  justify-content: space-between;
-  width: 80%;
+.user-avatar-img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: solid 2px #000;
+  overflow: hidden;
+  object-fit: cover;
 }
 
-.example-form {
-  min-width: 150px;
-  max-width: 350px;
-  width: 100%;
+.user-username {
+  font-size: 1.3rem;
+  text-align: center;
+  margin: 10px 0;
 }
 
-.example-full-width {
-  width: 100%;
+.divider {
+  margin: 40px 0;
+}
+
+.title {
+  font-size: 1.3rem;
 }
 
 .wrapper-fiction {
@@ -26,7 +59,7 @@
 }
 
 .fiction-list-wrapper {
-  width: 80%;
+  width: 100%;
 }
 
 .fiction-list {
@@ -46,16 +79,16 @@
   height: 100%;
 }
 
-mat-card-header {
+.card-header {
   border-bottom: solid 1px;
 }
 
-mat-card-actions {
+.card-action {
   border-top: solid 1px;
 }
 
-mat-card-header,
-mat-card-actions {
+.card-header,
+.card-action {
   display: flex;
   justify-content: center;
 }
@@ -75,29 +108,9 @@ mat-card-content {
   height: 400px;
 }
 
-img {
+.fiction-img {
   width: 100%;
   max-width: 300px;
   max-height: 400px;
   object-fit: contain;
-}
-.wrapper-tag {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 40px;
-}
-
-.tag-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  width: 80%;
-}
-
-.fiction-tag {
-  margin-top: 20px;
-}
-
-.tag-item {
-  margin: 0 10px !important;
 }

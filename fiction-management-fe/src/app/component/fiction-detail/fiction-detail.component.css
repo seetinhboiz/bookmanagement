@@ -1,0 +1,155 @@
+.wrapper-button {
+  display: flex;
+  justify-content: center;
+}
+
+.fiction-edit {
+  display: flex;
+  justify-content: right;
+  width: 80%;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.fiction {
+  width: 80%;
+  min-height: 100vh;
+}
+
+.fiction-title {
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.fiction-cover {
+  display: flex;
+  align-items: center;
+  height: 600px;
+}
+
+img {
+  width: 100%;
+  max-height: 600px;
+  object-fit: contain;
+}
+
+.fiction-view {
+  margin: 10px 0;
+  text-align: center;
+}
+
+.avatar-wrapper {
+  display: flex;
+  flex: 0;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.author-name {
+  font-size: 1rem;
+}
+
+.avatar,
+.author-name {
+  margin: 10px 5px;
+}
+
+.avatar-wrapper:hover {
+  opacity: 0.8;
+  transition: opacity 0.3s;
+  cursor: pointer;
+}
+
+.tag-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.fiction-tag {
+  margin-top: 20px;
+}
+
+.tag-item {
+  margin: 0 10px !important;
+}
+
+.fiction-description {
+  margin: 20px 0;
+}
+
+table {
+  width: 100%;
+  margin: 10px 0 20px 0;
+}
+
+.id-column {
+  width: 50px;
+}
+
+.mat-mdc-row:hover {
+  opacity: 0.6;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.fiction-comment-wrapper {
+  width: 100%;
+}
+
+.fiction-comment {
+  margin-top: 50px;
+}
+
+.fiction-comment {
+  margin-bottom: 60px;
+}
+
+.example-button-row {
+  display: flex;
+  justify-content: right;
+}
+
+.example-button-row button {
+  margin-right: 8px;
+}
+
+/* Comment */
+.comment {
+  display: flex;
+  width: 100%;
+}
+
+.comment-detail {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin-top: 10px;
+  margin-left: 20px;
+}
+
+.comment-username {
+  font-weight: 600;
+}
+
+.comment-content {
+  margin-top: 10px;
+}
+
+.edit-input {
+  width: 100%;
+}
+
+.edit-action {
+  display: flex;
+  justify-content: right;
+}

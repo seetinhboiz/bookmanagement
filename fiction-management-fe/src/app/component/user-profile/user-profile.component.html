@@ -1,0 +1,52 @@
+<div class="wrapper">
+  <div class="wrapper-user">
+    <div class="wrapper-avatar">
+      <mat-card>
+        <mat-card-header>
+          <div class="user-avatar">
+            <img
+              [src]="userById?.avatarUrl"
+              alt="Photo"
+              class="user-avatar-img"
+            />
+            <div class="user-username">{{ userById?.username }}</div>
+          </div>
+        </mat-card-header>
+        <mat-card-actions *ngIf="userById?.username === username">
+          <button mat-button (click)="onOPenDialog()">Edit</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+
+    <mat-divider class="divider"></mat-divider>
+
+    <div class="wrapper-fictions">
+      <div class="title">User Fictions</div>
+
+      <div class="fiction-list-wrapper">
+        <div class="fiction-list">
+          <div class="ficiton" *ngFor="let fiction of fictionsByUserId">
+            <mat-card class="example-card">
+              <mat-card-header class="card-header">
+                <mat-card-title>{{ fiction.name.toUpperCase() }}</mat-card-title>
+              </mat-card-header>
+              <div class="wrapper-img">
+                <img mat-card-image [src]="fiction.coverUrl" alt="Photo" class="fiction-img"/>
+              </div>
+              <mat-card-content>
+                <p>
+                  {{ fiction.description }}
+                </p>
+              </mat-card-content>
+              <mat-card-actions class="card-action">
+                <button mat-button [routerLink]="['/fiction', fiction.id]">
+                  CHI TIẾT
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -86,7 +86,9 @@ export class UserDialog {
     public dialogRef: MatDialogRef<UserDialog>,
     @Inject(MAT_DIALOG_DATA)
     public userById: { user?: User }
-  ) {}
+  ) {
+    console.log('data: ', userById.user)
+  }
 
   dialogTitle = this.userById.user ? 'Update User' : 'Create User';
 

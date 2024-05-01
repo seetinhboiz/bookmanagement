@@ -38,11 +38,14 @@ public class UserAPI {
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getById(@PathVariable long id) {
         try {
-            return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
+            UserDTO userById = userService.findById(id);
+            if (userById != null) {
+                return new ResponseEntity<>(userById, HttpStatus.OK);
+            }
         } catch (Exception e) {
             loggerException("getting", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("/create")
