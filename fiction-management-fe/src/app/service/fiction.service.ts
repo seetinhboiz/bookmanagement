@@ -15,6 +15,10 @@ export class FictionService {
     return this.http.get<Fiction[]>(this.urlFiction);
   }
 
+  getFilterFiction(tagId: number): Observable<Fiction[]> {
+    return this.http.get<Fiction[]>(`${this.urlFiction}/filter/${tagId}`)
+  }
+
   getFictionById(id: number): Observable<Fiction> {
     return this.http.get<Fiction>(`${this.urlFiction}/${id}`);
   }

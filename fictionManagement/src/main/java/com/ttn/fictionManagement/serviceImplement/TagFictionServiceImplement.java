@@ -49,8 +49,12 @@ public class TagFictionServiceImplement implements TagFictionService {
 
     @Override
     public List<Long> findAllByFictionId(long fictionId) {
-        List<Long> idTagFictions = tagFictionRepository.findAllByFictionId(fictionId);
-        return idTagFictions;
+        return tagFictionRepository.findAllByFictionId(fictionId);
+    }
+
+    @Override
+    public List<Long> findAllByTagId(long tagId) {
+        return tagFictionRepository.findAllByTagId(tagId);
     }
 
     @Override

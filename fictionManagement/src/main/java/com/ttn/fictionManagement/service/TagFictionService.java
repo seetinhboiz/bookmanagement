@@ -11,5 +11,6 @@ public interface TagFictionService {
     public TagFictionDTO createOrUpdate(TagFictionDTO tagFiction);
     public void deleteTagFiction(long id);
     public List<Long> findAllByFictionId(long fictionId);
+    public List<Long> findAllByTagId(long tagId);
     public void deleteByFictionIdTagId(long fictionId, long tagId);
 }

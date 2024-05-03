@@ -65,4 +65,12 @@ export class HomeComponent {
   searchInputChanged(keyword: string | null) {
     console.log('changed: ', keyword);
   }
+
+  filterFiction(tagId: number | null | undefined) {
+    if (tagId) {
+      this.ficitonService
+        .getFilterFiction(tagId)
+        .subscribe((listFiction) => (this.fictions = listFiction));
+    }
+  }
 }

@@ -14,6 +14,9 @@ public interface TagFictionRepository extends JpaRepository<TagFiction, Long> {
     @Query("select distinct tagFiction.tagId from TagFiction tagFiction where tagFiction.fictionId = ?1")
     public List<Long> findAllByFictionId(long id);
 
+    @Query("select distinct tagFiction.fictionId from TagFiction tagFiction where tagFiction.tagId = ?1")
+    public List<Long> findAllByTagId(long id);
+
     @Transactional
     @Modifying
     @Query("delete from TagFiction tagFiction where tagFiction.fictionId = ?1 and tagFiction.tagId = ?2")

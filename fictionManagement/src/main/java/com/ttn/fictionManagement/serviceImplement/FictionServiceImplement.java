@@ -56,6 +56,26 @@ public class FictionServiceImplement implements FictionService {
     }
 
     @Override
+    public List<FictionDetailDTO> findByFilter(long tagId, String keyword) {
+        List<Long> listFictionIdByTagId = tagFictionService.findAllByTagId(tagId);
+        List<FictionDetailDTO> listFictionByTagId = new ArrayList<>();
+
+        if (keyword != null) {
+            for (Long fictionId : listFictionIdByTagId) {
+                if (findById(fictionId).getName().toLowerCase().contains(keyword.toLowerCase())) {
+                    listFictionByTagId.add(findById(fictionId));
+                }
+            }
+        } else {
+            for (Long fictionId : listFictionIdByTagId) {
+                listFictionByTagId.add(findById(fictionId));
+            }
+        }
+
+        return listFictionByTagId;
+    }
+
+    @Override
     public FictionDetailDTO findById(long id) {
         Optional<Fiction> fictionOptional = fictionRepository.findById(id);
         FictionDetailDTO fictionDetailDTO = modelMapper.map(fictionOptional, FictionDetailDTO.class);
@@ -102,6 +122,11 @@ public class FictionServiceImplement implements FictionService {
     @Override
     public List<FictionDetailDTO> findAllByUserId(int id) {
         return modelMapListFictionDetailDTO(this.fictionRepository.getFictionsByUserId(id));
+    }
+
+    @Override
+    public List<FictionDetailDTO> searchFiction(String keyword) {
+        return modelMapListFictionDetailDTO(fictionRepository.searchFiction(keyword));
     }
 
     public List<FictionDetailDTO> modelMapListFictionDetailDTO(List<Fiction> fictions) {

@@ -58,6 +58,32 @@ public class FictionAPI {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<List<FictionDetailDTO>> searchFiction(@PathVariable String keyword) {
+        try {
+            List<FictionDetailDTO> listFiction = fictionService.searchFiction(keyword);
+            if (listFiction != null) {
+                return new ResponseEntity<>(listFiction, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            loggerException("getting", e);
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<FictionDetailDTO>> filterFiction(@RequestParam(required = false) long tagId, @RequestParam(required = false) String keyword) {
+        try {
+            List<FictionDetailDTO> listFiction = fictionService.findByFilter(tagId, keyword);
+            if (listFiction != null) {
+                return new ResponseEntity<>(listFiction, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            loggerException("getting", e);
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<FictionDTO> createFiction(@RequestBody FictionDTO fiction) {
         try {

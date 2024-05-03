@@ -13,6 +13,8 @@ import { Fiction } from '../../interface/fiction';
 import { Tag } from '../../interface/tag';
 import { CommentService } from '../../service/comment.service';
 import { FictionService } from '../../service/fiction.service';
+import { UserService } from '../../service/user.service';
+import { User } from '../../interface/user';
 
 @Component({
   selector: 'app-fiction-detail',
@@ -35,9 +37,11 @@ export class FictionDetailComponent {
   constructor(
     private fictionService: FictionService,
     private commentService: CommentService,
+    private userService: UserService,
     private route: ActivatedRoute,
     private routerNavigate: Router
   ) {
+    this.getUserByUsername();
     this.getFictionById();
   }
 
@@ -45,6 +49,8 @@ export class FictionDetailComponent {
   chapters: Chapter[] = [];
   tags: Tag[] = [];
   comments: Comment[] = [];
+
+  user: User | null = null;
 
   displayedColumns: string[] = ['position', 'name'];
   dataSource = this.chapters;
@@ -78,15 +84,18 @@ export class FictionDetailComponent {
   }
 
   onPostComment() {
-    const newComment: Comment = {
-      content: this.commentInput.value || '',
-      fictionId: this.fictionById?.id || -1,
-      userId: Number(localStorage.getItem('userId')),
-    };
+    if (this.user?.id) {
+      const newComment: Comment = {
+        content: this.commentInput.value || '',
+        fictionId: this.fictionById?.id || -1,
+        userId: this.user?.id,
+      };
 
-    this.commentService.postComment(newComment).subscribe(() => {
-      this.getFictionById();
-    });
+      this.commentService.postComment(newComment).subscribe(() => {
+        this.getFictionById();
+        this.commentInput.setValue('');
+      });
+    }
   }
 
   onEditComment(comment: Comment) {
@@ -118,6 +127,22 @@ export class FictionDetailComponent {
 
   routerToChapter(chapterId: number) {
     console.log('this worked', chapterId);
-    this.routerNavigate.navigate(['/fiction', this.fictionById?.id, 'chapter', chapterId]);
+    this.routerNavigate.navigate([
+      '/fiction',
+      this.fictionById?.id,
+      'chapter',
+      chapterId,
+    ]);
+  }
+
+  getUserByUsername() {
+    if (typeof localStorage !== 'undefined') {
+      const storedUsername = localStorage.getItem('username');
+      if (storedUsername) {
+        this.userService
+          .getUserByUsername(storedUsername)
+          .subscribe((user) => (this.user = user));
+      }
+    }
   }
 }

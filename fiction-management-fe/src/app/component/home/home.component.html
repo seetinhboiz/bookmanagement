@@ -50,7 +50,7 @@
       class="fiction-tag"
       *ngFor="let tag of tags"
     >
-      <mat-chip class="tag-item">{{ tag.name }}</mat-chip>
+      <mat-chip class="tag-item" (click)="filterFiction(tag.id)">{{ tag.name }}</mat-chip>
     </mat-chip-set>
   </div>
 </div>
