@@ -10,9 +10,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class FictionServiceImplement implements FictionService {
@@ -56,20 +59,23 @@ public class FictionServiceImplement implements FictionService {
     }
 
     @Override
-    public List<FictionDetailDTO> findByFilter(long tagId, String keyword) {
+    public List<FictionDetailDTO> findByFilter(Long tagId, String keyword) {
         List<Long> listFictionIdByTagId = tagFictionService.findAllByTagId(tagId);
         List<FictionDetailDTO> listFictionByTagId = new ArrayList<>();
 
-        if (keyword != null) {
-            for (Long fictionId : listFictionIdByTagId) {
-                if (findById(fictionId).getName().toLowerCase().contains(keyword.toLowerCase())) {
-                    listFictionByTagId.add(findById(fictionId));
-                }
-            }
+        if (tagId == 0) {
+            listFictionByTagId = findAll();
         } else {
             for (Long fictionId : listFictionIdByTagId) {
                 listFictionByTagId.add(findById(fictionId));
             }
+        }
+
+        if (keyword != null) {
+            String normalizedKeyword = removeDiacritics(keyword).toLowerCase();
+            return listFictionByTagId.stream()
+                    .filter(fiction -> removeDiacritics(fiction.getName()).toLowerCase().contains(normalizedKeyword))
+                    .collect(Collectors.toList());
         }
 
         return listFictionByTagId;
@@ -126,6 +132,7 @@ public class FictionServiceImplement implements FictionService {
 
     @Override
     public List<FictionDetailDTO> searchFiction(String keyword) {
+        keyword = removeDiacritics(keyword).toLowerCase();
         return modelMapListFictionDetailDTO(fictionRepository.searchFiction(keyword));
     }
 
@@ -181,5 +188,14 @@ public class FictionServiceImplement implements FictionService {
         }
 
         return tagDTOS;
+    }
+
+    public static String removeDiacritics(String input) {
+        if (input == null) {
+            return null;
+        }
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(normalized).replaceAll("");
     }
 }

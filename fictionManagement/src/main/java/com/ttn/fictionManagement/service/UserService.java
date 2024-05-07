@@ -12,4 +12,5 @@ public interface UserService {
     public void deleteUser(long id);
     public UserDTO findByUsername(String username);
     public boolean checkPassword(String rawPassword, String encodedPassword);
+    public List<String> findAllUsername();
 }

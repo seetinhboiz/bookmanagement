@@ -7,11 +7,11 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule, RouterOutlet } from '@angular/router';
+import { debounceTime } from 'rxjs';
 import { Fiction } from '../../interface/fiction';
 import { Tag } from '../../interface/tag';
 import { FictionService } from '../../service/fiction.service';
 import { TagService } from '../../service/tag.service';
-import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -40,14 +40,14 @@ export class HomeComponent {
   ) {
     this.getListFiction();
     this.getListTag();
-    this.searchInput.valueChanges
-      .pipe(debounceTime(1000))
-      .subscribe((searchTerm) => this.searchInputChanged(searchTerm));
+    this.searchInputChanged();
   }
 
   fictions: Fiction[] = [];
 
   tags: Tag[] = [];
+
+  tagId: number = -1;
 
   // Input Form
   searchInput = new FormControl('');
@@ -62,15 +62,22 @@ export class HomeComponent {
     this.tagService.getTags().subscribe((tags) => (this.tags = tags));
   }
 
-  searchInputChanged(keyword: string | null) {
-    console.log('changed: ', keyword);
+  searchInputChanged() {
+    this.searchInput.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(() => {
+        this.filterFiction(null);
+      });
   }
 
   filterFiction(tagId: number | null | undefined) {
-    if (tagId) {
-      this.ficitonService
-        .getFilterFiction(tagId)
-        .subscribe((listFiction) => (this.fictions = listFiction));
+    if (tagId !== null && tagId !== undefined) {
+      this.tagId = tagId;
     }
+    this.ficitonService
+      .getFilterFiction(this.tagId, this.searchInput.value)
+      .subscribe((fictions) => {
+        this.fictions = fictions;
+      });
   }
 }

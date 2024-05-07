@@ -23,6 +23,10 @@ export class UserService {
     return this.http.get<User>(`${this.urlUser}/username/${username}`)
   }
 
+  getAllUsername() {
+    return this.http.get<string[]>(`${this.urlUser}/allUsername`)
+  }
+
   createUser(user: User): Observable<User> {
     console.log('this function has called');
     return this.http.post<User>(`${this.urlUser}/create`, user);

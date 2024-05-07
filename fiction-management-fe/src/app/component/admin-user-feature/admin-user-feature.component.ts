@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
@@ -86,15 +92,17 @@ export class UserDialog {
     public dialogRef: MatDialogRef<UserDialog>,
     @Inject(MAT_DIALOG_DATA)
     public userById: { user?: User }
-  ) {
-    console.log('data: ', userById.user)
-  }
+  ) {}
 
   dialogTitle = this.userById.user ? 'Update User' : 'Create User';
 
-  username = new FormControl(this.userById.user?.username || '');
-  password = new FormControl(this.userById.user?.password || '');
-  role = new FormControl(this.userById.user?.role || '');
+  username = new FormControl(this.userById.user?.username || '', [
+    Validators.required,
+  ]);
+  password = new FormControl(this.userById.user?.password || '', [
+    Validators.required,
+  ]);
+  role = new FormControl(this.userById.user?.role || '', [Validators.required]);
 
   avatarUrl: string = this.userById.user?.avatarUrl
     ? this.userById.user?.avatarUrl
@@ -121,9 +129,11 @@ export class UserDialog {
       role: this.role.value || '',
       avatarPublicId: this.avatarPublicId || '',
     };
-    this.userService.createUser(newUser).subscribe(() => {
-      this.dialogRef.close();
-    });
+    if (newUser !== undefined) {
+      this.userService.createUser(newUser).subscribe(() => {
+        this.dialogRef.close();
+      });
+    }
   }
 
   updateUser() {
@@ -135,13 +145,16 @@ export class UserDialog {
       role: this.role.value || '',
       avatarPublicId: this.avatarPublicId || '',
     };
-    this.userService.updateUser(updateUser).subscribe(() => {
-      this.dialogRef.close();
-    });
+    if (updateUser !== undefined) {
+      this.userService.updateUser(updateUser).subscribe(() => {
+        this.dialogRef.close();
+      });
+    }
   }
 
   onChange(event: any) {
     this.isUpdateFile = true;
+    this.isAvatar = true;
     this.selectedFile = event.target.files[0];
   }
 
@@ -195,6 +208,7 @@ export class UserDialog {
     const files = (event.target as HTMLInputElement).files;
     this.handleFiles(files);
     this.isUpdateFile = true;
+    this.isAvatar = true;
     this.selectedFile = event.target.files[0];
   }
 

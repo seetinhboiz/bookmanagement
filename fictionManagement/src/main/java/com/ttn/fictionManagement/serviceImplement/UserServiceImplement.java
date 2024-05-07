@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,6 +73,16 @@ public class UserServiceImplement implements UserService {
     @Override
     public boolean checkPassword(String rawPassword, String encodedPassword) {
         return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
+
+    @Override
+    public List<String> findAllUsername() {
+        List<String> listUsername = new ArrayList<>();
+        List<User> listUser = userRepository.findAll();
+        for (User user : listUser) {
+            listUsername.add(user.getUsername());
+        }
+        return listUsername;
     }
 
     public boolean isUserPresent(UserDTO user) {

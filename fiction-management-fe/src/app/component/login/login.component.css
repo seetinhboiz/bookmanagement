@@ -1,24 +1,77 @@
 .wrapper-login {
-    display: flex;
-    align-items: center;
-    height: 80vh;
+  display: flex;
+  align-items: center;
+  min-height: 80vh;
+  margin-bottom: 50px;
 }
 
 mat-tab-group {
-    width: 30%;
-    margin: auto;
-    padding: 40px;
-    border: 1px solid #FF7235;
-    border-radius: 20px;
+  width: 30%;
+  margin: auto;
+  padding: 40px;
+  border: 1px solid #ff7235;
+  border-radius: 20px;
 }
 
 form {
-    display: flex;
-    flex-direction: column;
-    margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0;
 }
 
 .align-right {
-    display: flex;
-    justify-content: right;
+  display: flex;
+  justify-content: right;
+}
+
+:host ::ng-deep .mat-mdc-tab-body-content {
+  overflow-y: hidden;
+}
+
+/* Drag drop image */
+.drop-area {
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.drop-area label {
+  width: 100%;
+  overflow: hidden;
+}
+
+.drop-message {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+#image-preview {
+  margin-top: 20px;
+}
+
+.image-preview-item {
+  margin: 5px;
+  display: inline-block;
+}
+
+.image-preview-item img {
+  max-width: 200px;
+}
+
+/* Hide the input visually */
+#fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }

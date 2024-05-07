@@ -4,30 +4,104 @@
       <form>
         <mat-form-field class="example-full-width">
           <mat-label>Username</mat-label>
-          <input matInput [formControl]="username"/>
+          <input matInput [formControl]="username" placeholder="admin" />
+          @if (username.hasError('required')) {
+          <mat-error>Username is <strong>required</strong></mat-error>
+          }
         </mat-form-field>
         <mat-form-field class="example-full-width">
           <mat-label>Password</mat-label>
-          <input matInput type="password" [formControl]="password"/>
+          <input
+            matInput
+            type="password"
+            [formControl]="password"
+            placeholder="123"
+          />
+          @if (password.hasError('required')) {
+          <mat-error>Password is <strong>required</strong></mat-error>
+          }
         </mat-form-field>
       </form>
       <div class="align-right">
-        <button mat-flat-button color="primary" (click)="onLogin()">Sign in</button>
+        <button
+          mat-flat-button
+          color="primary"
+          [disabled]="!username.valid || !password.valid"
+          (click)="onLogin()"
+        >
+          Sign in
+        </button>
       </div>
     </mat-tab>
+
+    <!-- Sign up -->
     <mat-tab label="SIGN UP">
-      <form>
+      <form [formGroup]="signupForm">
         <mat-form-field class="example-full-width">
           <mat-label>Username</mat-label>
-          <input matInput />
+          <input
+            matInput
+            placeholder="admin"
+            type="text"
+            formControlName="newUsername"
+          />
+          @if (signupForm.controls.newUsername.hasError('required')) {
+          <mat-error>Username is <strong>required</strong></mat-error>
+          }
         </mat-form-field>
         <mat-form-field class="example-full-width">
           <mat-label>Password</mat-label>
-          <input matInput type="password" />
+          <input
+            matInput
+            type="password"
+            formControlName="newPassword"
+            placeholder="123"
+          />
+          @if (signupForm.controls.newPassword.hasError('required')) {
+          <mat-error>Password is <strong>required</strong></mat-error>
+          }
         </mat-form-field>
+
+        <!-- File Upload -->
+        <label
+          class="drop-area"
+          [class.drag-over]="dragging"
+          for="fileInput"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)"
+        >
+          @if (!dragging) {
+          <div class="drop-message">Drag & Drop Avatar Image Here</div>
+          } @if (dragging) {
+          <div class="drop-message">Drop Here</div>
+          }
+          <input
+            type="file"
+            id="fileInput"
+            multiple
+            accept="image/*"
+            (change)="onFileSelected($event)"
+          />
+          @if (!isAvatar) {
+          <mat-error>File is <strong>required</strong></mat-error>
+          }
+          <div id="image-preview">
+            <div class="image-preview-item">
+              <img [src]="avatarUrl" />
+            </div>
+          </div>
+        </label>
       </form>
       <div class="align-right">
-        <button mat-flat-button color="primary">Sign up</button>
+        <button
+          mat-flat-button
+          color="primary"
+          [disabled]="!signupForm.valid || !isAvatar"
+          (click)="onSignup()"
+        >
+          Sign up
+        </button>
       </div>
     </mat-tab>
   </mat-tab-group>

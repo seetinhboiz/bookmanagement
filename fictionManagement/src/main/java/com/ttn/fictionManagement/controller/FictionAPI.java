@@ -72,7 +72,7 @@ public class FictionAPI {
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<List<FictionDetailDTO>> filterFiction(@RequestParam(required = false) long tagId, @RequestParam(required = false) String keyword) {
+    public ResponseEntity<List<FictionDetailDTO>> filterFiction(@RequestParam(required = false, defaultValue = "0") Long tagId, @RequestParam(required = false) String keyword) {
         try {
             List<FictionDetailDTO> listFiction = fictionService.findByFilter(tagId, keyword);
             if (listFiction != null) {

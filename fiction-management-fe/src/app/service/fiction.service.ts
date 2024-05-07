@@ -15,8 +15,23 @@ export class FictionService {
     return this.http.get<Fiction[]>(this.urlFiction);
   }
 
-  getFilterFiction(tagId: number): Observable<Fiction[]> {
-    return this.http.get<Fiction[]>(`${this.urlFiction}/filter/${tagId}`)
+  getFilterFiction(
+    tagId: number | null,
+    keyword: string | null
+  ): Observable<Fiction[]> {
+    let queryParam = [];
+
+    if (tagId !== -1) {
+      queryParam.push(`tagId=${tagId}`);
+    }
+
+    if (keyword !== '') {
+      queryParam.push(`keyword=${keyword}`);
+    }
+
+    const queryString = queryParam.length > 0 ? `?${queryParam.join('&')}` : '';
+
+    return this.http.get<Fiction[]>(`${this.urlFiction}/filter${queryString}`);
   }
 
   getFictionById(id: number): Observable<Fiction> {

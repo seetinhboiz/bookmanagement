@@ -5,9 +5,11 @@ import com.ttn.fictionManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LoginServiceImplement implements LoginService {
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public LoginServiceImplement(UserService userService) {
@@ -25,5 +27,16 @@ public class LoginServiceImplement implements LoginService {
     @Override
     public boolean findUserByUsername(String username) {
         return userService.findByUsername(username) != null;
+    }
+
+    @Override
+    public Boolean checkUsernameIsUnique(String usernameInput) {
+        List<String> listUsername = userService.findAllUsername();
+        for (String username : listUsername) {
+            if (username.equals(usernameInput)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

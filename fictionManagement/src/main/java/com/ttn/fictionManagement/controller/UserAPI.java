@@ -95,6 +95,16 @@ public class UserAPI {
         return new ResponseEntity<>(userService.findByUsername(username), HttpStatus.OK);
     }
 
+        @GetMapping("/allUsername")
+    public ResponseEntity<List<String>> getAllUserName() {
+        try {
+            return new ResponseEntity<>(userService.findAllUsername(), HttpStatus.OK);
+        } catch (Exception e) {
+            loggerException("updating", e);
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     public void loggerException(String action, Exception e) {
         logger.error("Error occurred while " + action + " user", e);
     }

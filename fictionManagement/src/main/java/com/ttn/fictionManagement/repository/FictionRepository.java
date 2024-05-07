@@ -12,6 +12,6 @@ public interface FictionRepository extends JpaRepository<Fiction, Long> {
     @Query("select fiction from Fiction fiction where fiction.userId = ?1")
     public List<Fiction> getFictionsByUserId(int id);
 
-    @Query("select  fiction from  Fiction fiction where  fiction.name like %?1%")
+    @Query("select  fiction from  Fiction fiction where LOWER(FUNCTION('replace', fiction.name, 'Đ', 'd')) like %?1%")
     public List<Fiction> searchFiction(String keyword);
 }

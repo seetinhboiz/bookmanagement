@@ -25,6 +25,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    if (typeof sessionStorage !== 'undefined') {
+      this.username = sessionStorage.getItem('username') || '';
+      this.avatar = sessionStorage.getItem('avatar') || '';
+    }
+
     this.reloadSubscription =
       this.communicationService.reloadObservable.subscribe(() => {
         this.reload();
@@ -53,9 +58,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.user = user;
           if (user?.username) {
             this.username = user.username;
+            if (typeof sessionStorage !== 'undefined') {
+              sessionStorage.setItem('username', user.username);
+            }
           }
           if (user?.avatarUrl) {
             this.avatar = user.avatarUrl;
+            if (typeof sessionStorage !== 'undefined') {
+              sessionStorage.setItem('avatar', user.avatarUrl);
+            }
           }
         });
       }

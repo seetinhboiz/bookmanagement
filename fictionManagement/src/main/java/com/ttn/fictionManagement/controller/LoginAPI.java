@@ -31,4 +31,14 @@ public class LoginAPI {
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @PostMapping("/api/login/username")
+        public ResponseEntity<Boolean> checkUsernameIsUnique(@RequestBody String username) {
+        try {
+            return new ResponseEntity<>(loginService.checkUsernameIsUnique(username), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

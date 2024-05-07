@@ -44,4 +44,8 @@ export class AuthService {
     localStorage.clear();
     this.loginStatusChange.next(this.isUserLoggedIn);
   }
+
+  checkUsernameIsUnique(username: string): Observable<any> {
+    return this.http.post<string>(`${this.urlLogin}/username`, username);
+  }
 }
