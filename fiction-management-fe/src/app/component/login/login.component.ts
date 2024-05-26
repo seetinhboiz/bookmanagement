@@ -1,10 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import {
+  AbstractControl,
+  AsyncValidatorFn,
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,9 +15,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Router } from '@angular/router';
-import { debounceTime } from 'rxjs';
 import { AuthService } from '../../service/auth.service';
 import { CommunicationService } from '../../service/communication.service';
+import { Observable, map, of } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -36,13 +39,7 @@ export class LoginComponent {
     private communicationService: CommunicationService,
     private authService: AuthService,
     private router: Router
-  ) {
-    this.signupForm.controls.newUsername.valueChanges
-      .pipe(debounceTime(500))
-      .subscribe(() => {
-        this.checkUsernameIsUnique();
-      });
-  }
+  ) {}
 
   // Form Login
   username = new FormControl('', [Validators.required]);
@@ -50,7 +47,11 @@ export class LoginComponent {
 
   // Form Sign up
   signupForm = new FormGroup({
-    newUsername: new FormControl('', [Validators.required]),
+    newUsername: new FormControl(
+      '',
+      [Validators.required],
+      [this.uniqueUsernameValidator(this.authService)]
+    ),
     newPassword: new FormControl('', [Validators.required]),
     newRole: new FormControl(''),
   });
@@ -117,13 +118,23 @@ export class LoginComponent {
   }
 
   // Sign up
-  onSignup() {}
-
-  checkUsernameIsUnique() {
-    if (this.signupForm.controls.newUsername.value) {
-      this.authService
-        .checkUsernameIsUnique(this.signupForm.controls.newUsername.value)
-        .subscribe((response) => console.log(response));
+  onSignup() {
+    if (1 === 1) {
     }
+  }
+
+  uniqueUsernameValidator(authService: AuthService): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      const username = control.value;
+      if (!username) {
+        return of(null);
+      }
+
+      return authService
+        .checkUsernameIsUnique(username)
+        .pipe(
+          map((alreadyTaken) => (alreadyTaken ? null : { alreadyTaken: true }))
+        );
+    };
   }
 }

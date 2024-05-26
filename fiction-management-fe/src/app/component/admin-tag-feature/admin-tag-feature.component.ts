@@ -1,6 +1,6 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import {
@@ -89,7 +89,8 @@ export class AdminTagFeatureComponent implements OnInit {
 })
 export class TagDialog implements OnInit {
   dialogTitle = 'Create Tag';
-  name = new FormControl<string | Tag>('');
+
+  name = new FormControl<string | Tag>('', [Validators.required]);
 
   // Optional tag
   tags: Tag[] = [];

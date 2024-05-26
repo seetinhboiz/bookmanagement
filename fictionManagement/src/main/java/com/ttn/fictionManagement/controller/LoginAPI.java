@@ -33,7 +33,7 @@ public class LoginAPI {
     }
 
     @PostMapping("/api/login/username")
-        public ResponseEntity<Boolean> checkUsernameIsUnique(@RequestBody String username) {
+    public ResponseEntity<Boolean> checkUsernameIsUnique(@RequestBody String username) {
         try {
             return new ResponseEntity<>(loginService.checkUsernameIsUnique(username), HttpStatus.OK);
         } catch (Exception e) {

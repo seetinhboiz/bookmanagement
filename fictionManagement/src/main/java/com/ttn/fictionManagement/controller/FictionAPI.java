@@ -35,10 +35,10 @@ public class FictionAPI {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<FictionDetailDTO> getById(@PathVariable long id) {
+    @GetMapping("/{fictionId}/{userId}")
+    public ResponseEntity<FictionDetailDTO> getById(@PathVariable long fictionId, @PathVariable long userId) {
         try {
-            return new ResponseEntity<>(fictionService.findById(id), HttpStatus.OK);
+            return new ResponseEntity<>(fictionService.findById(fictionId, userId), HttpStatus.OK);
         } catch (Exception e) {
             loggerException("getting", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -98,7 +98,7 @@ public class FictionAPI {
     @PutMapping("/update/{id}")
     public ResponseEntity<FictionDTO> updateFiction(@RequestBody FictionDTO fiction, @PathVariable long id) {
         try {
-            FictionDetailDTO fictionById = fictionService.findById(id);
+            FictionDetailDTO fictionById = fictionService.findById(id, -1);
             if (fictionById.getId() != null) {
                 fictionService.createOrUpdate(fiction);
                 return new ResponseEntity<>(fiction, HttpStatus.OK);
@@ -114,7 +114,7 @@ public class FictionAPI {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<FictionDTO> deleteFiction(@PathVariable long id) {
         try {
-            FictionDetailDTO fictionById = fictionService.findById(id);
+            FictionDetailDTO fictionById = fictionService.findById(id, -1);
             if (fictionById.getId() != null) {
                 fictionService.deleteFiction(id);
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);

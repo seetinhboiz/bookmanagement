@@ -1,6 +1,6 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -45,8 +45,8 @@ export class AdminChapterFeatureComponent {
   }
 
   // FormControl
-  name = new FormControl();
-  content = new FormControl();
+  name = new FormControl('', [Validators.required]);
+  content = new FormControl('', [Validators.required]);
 
   fictionId = -1;
   chapterId = -1;
@@ -74,8 +74,10 @@ export class AdminChapterFeatureComponent {
   }
 
   updateFormControl() {
-    this.name.setValue(this.chapterById?.name);
-    this.content.setValue(this.chapterById?.content);
+    if (this.chapterById) {
+      this.name.setValue(this.chapterById?.name);
+      this.content.setValue(this.chapterById?.content);
+    }
   }
 
   goBack() {
@@ -106,10 +108,8 @@ export class AdminChapterFeatureComponent {
 
   onSubmit() {
     if (this.chapterId === -1) {
-      console.log('create')
       this.onCreateChapter();
     } else {
-      console.log('update')
       this.onUpdateChapter();
     }
   }

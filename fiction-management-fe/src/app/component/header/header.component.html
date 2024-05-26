@@ -10,7 +10,7 @@
       />
     </a>
     <div class="wrapper-navbar-item">
-      <span class="navbar-item" routerLink="/admin">ADMIN</span>
+      <span class="navbar-item" routerLink="/admin" *ngIf="this.role === 'admin'">ADMIN</span>
     </div>
   </div>
 

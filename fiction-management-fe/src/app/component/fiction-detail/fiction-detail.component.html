@@ -48,6 +48,10 @@
 
     <div class="fiction-description">{{ fictionById?.description }}</div>
 
+    <div class="wrapper-button-continue">
+      <button mat-fab extended (click)="onContinueRead()">Continue reading</button>
+    </div>
+
     <div class="fiction-chapter">
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         <!-- Position Column -->

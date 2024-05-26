@@ -4,6 +4,9 @@
     <mat-form-field class="example-full-width">
       <mat-label>Chapter name</mat-label>
       <input matInput placeholder="" [formControl]="name" />
+      @if (name.hasError('required')) {
+        <mat-error>Name is <strong>required</strong></mat-error>
+      }
     </mat-form-field>
 
     <editor
@@ -11,6 +14,9 @@
       apiKey="c1lh9z9b2dnvq9oveb5593hyygqu17vw84q9ijxo96zhwc8d"
       [formControl]="content"
     ></editor>
+    @if (content.hasError('required')) {
+      <mat-error>Content is <strong>required</strong></mat-error>
+    }
   </form>
 </div>
 <div class="wrapper-button">
@@ -30,6 +36,7 @@
     color="primary"
     class="button-add button-action-chapter"
     (click)="onSubmit()"
+    [disabled]="name.hasError('required') || content.hasError('required')"
   >
     <mat-icon>add</mat-icon>
     Save

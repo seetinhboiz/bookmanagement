@@ -62,7 +62,7 @@
     mat-button
     cdkFocusInitial
     (click)="onSubmit()"
-    [disabled]="username.hasError('required') || password.hasError('required') || role.hasError('required')"
+    [disabled]="username.hasError('required') || password.hasError('required') || role.hasError('required') || !isAvatar"
   >
     Save
   </button>

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Fiction } from '../interface/fiction';
+import { Process } from '../interface/process';
 
 @Injectable({
   providedIn: 'root',
@@ -35,7 +36,11 @@ export class FictionService {
   }
 
   getFictionById(id: number): Observable<Fiction> {
-    return this.http.get<Fiction>(`${this.urlFiction}/${id}`);
+    let userId;
+    if (typeof sessionStorage !== 'undefined') {
+      userId = sessionStorage.getItem('id');
+    }
+    return this.http.get<Fiction>(`${this.urlFiction}/${id}/${userId}`);
   }
 
   getFictionByUserId(userId: number): Observable<Fiction[]> {
@@ -55,5 +60,12 @@ export class FictionService {
 
   deleteFiction(id: number): Observable<unknown> {
     return this.http.delete(`${this.urlFiction}/delete/${id}`);
+  }
+
+  updateProcess(process: Process): Observable<Process> {
+    return this.http.put<Process>(
+      'http://localhost:8080/api/process/update',
+      process
+    );
   }
 }

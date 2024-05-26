@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
@@ -10,7 +11,7 @@ import { UserService } from '../../service/user.service';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MatIconModule, RouterLink],
+  imports: [MatIconModule, RouterLink, CommonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
@@ -42,6 +43,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   username = '';
   avatar = '';
+  role = '';
 
   user: User | null = null;
 
@@ -56,6 +58,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
       if (storedUsername) {
         this.userService.getUserByUsername(storedUsername).subscribe((user) => {
           this.user = user;
+          if (user?.id) {
+            if (typeof sessionStorage !== 'undefined') {
+              sessionStorage.setItem('id', user.id.toString());
+            }
+          }
           if (user?.username) {
             this.username = user.username;
             if (typeof sessionStorage !== 'undefined') {
@@ -66,6 +73,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
             this.avatar = user.avatarUrl;
             if (typeof sessionStorage !== 'undefined') {
               sessionStorage.setItem('avatar', user.avatarUrl);
+            }
+          }
+          if (user?.role) {
+            this.role = user.role;
+            if (typeof sessionStorage !== 'undefined') {
+              sessionStorage.setItem('role', user.role);
             }
           }
         });

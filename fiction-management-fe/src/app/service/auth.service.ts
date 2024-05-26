@@ -1,4 +1,4 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -47,5 +47,13 @@ export class AuthService {
 
   checkUsernameIsUnique(username: string): Observable<any> {
     return this.http.post<string>(`${this.urlLogin}/username`, username);
+  }
+
+  getUser(): Observable<string> {
+    const headers = new HttpHeaders({
+      'Authorization': 'Basic ' + btoa('user:userPass')
+    });
+
+    return this.http.get(`http://localhost:8080/user`, { headers: headers, responseType: 'text' });
   }
 }

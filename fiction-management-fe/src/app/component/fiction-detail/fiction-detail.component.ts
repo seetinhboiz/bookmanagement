@@ -126,13 +126,27 @@ export class FictionDetailComponent {
   }
 
   routerToChapter(chapterId: number) {
-    console.log('this worked', chapterId);
+    this.updateProcess(chapterId);
     this.routerNavigate.navigate([
       '/fiction',
       this.fictionById?.id,
       'chapter',
       chapterId,
     ]);
+  }
+
+  updateProcess(newProcessId: number) {
+    if (this.fictionById?.process) {
+      this.fictionById.process.chapterProcessId = newProcessId;
+      console.log(this.fictionById?.process)
+      this.fictionService.updateProcess(this.fictionById?.process).subscribe();
+    }
+  }
+
+  onContinueRead() {
+    if (this.fictionById?.process?.chapterProcessId !== undefined) {
+      this.routerToChapter(this.fictionById?.process?.chapterProcessId);
+    }
   }
 
   getUserByUsername() {

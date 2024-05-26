@@ -10,7 +10,7 @@ public class FictionDTO {
     private String name;
     private Integer countView;
     private String coverUrl;
-    private Byte status;
+    private Boolean status;
     private String description;
     private Integer userId;
     private String coverPublicId;

@@ -12,10 +12,11 @@ public class FictionDetailDTO {
     private String name;
     private Integer countView;
     private String coverUrl;
-    private Byte status;
+    private Boolean status;
     private String description;
     private Integer userId;
     private UserDTO user;
+    private ProcessDTO process;
     private List<ChapterDTO> chapters;
     private List<CommentDetailDTO> comments;
     private List<TagDTO> tags;

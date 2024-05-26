@@ -10,7 +10,6 @@ export class ExpenseGuard implements CanActivate {
   canActivate(): boolean {
     if (typeof localStorage !== 'undefined') {
       const isUserLoggedIn = localStorage.getItem('isUserLoggedIn');
-      console.log('Is user logged in:', isUserLoggedIn);
       if (isUserLoggedIn === 'true') {
         return true;
       } else {

@@ -87,6 +87,12 @@ img {
   margin: 20px 0;
 }
 
+.wrapper-button-continue {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 table {
   width: 100%;
   margin: 10px 0 20px 0;

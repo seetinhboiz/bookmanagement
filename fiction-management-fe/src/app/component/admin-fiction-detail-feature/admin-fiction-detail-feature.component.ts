@@ -6,7 +6,12 @@ import {
 } from '@angular/cdk/drag-drop';
 import { AsyncPipe, CommonModule, Location } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import {
   MatAutocompleteModule,
   MatAutocompleteSelectedEvent,
@@ -81,6 +86,7 @@ export class AdminFictionDetailFeatureComponent {
   }
   fictionById: Fiction | null = null;
   isUpdate: boolean = false;
+  userRole: string | null = '';
 
   isUpdateFile: boolean = false;
   selectedFile: File | undefined;
@@ -101,13 +107,16 @@ export class AdminFictionDetailFeatureComponent {
   // User
   currentUser: User | null = null;
 
+  // Drag drop image
+  isAvatar: boolean = false;
+
   // Form Control
-  name = new FormControl();
-  status = new FormControl();
-  description = new FormControl();
-  userId = new FormControl();
-  countView = new FormControl();
-  coverUrl = new FormControl();
+  name = new FormControl('', [Validators.required]);
+  status = new FormControl(false, [Validators.required]);
+  description = new FormControl('', [Validators.required]);
+  userId = new FormControl('', [Validators.required]);
+  countView = new FormControl(-1, [Validators.required]);
+  coverUrl = new FormControl('', [Validators.required]);
 
   getFictionById() {
     const idParam = Number(this.route.snapshot.paramMap.get('id'));
@@ -116,6 +125,7 @@ export class AdminFictionDetailFeatureComponent {
         this.fictionById = fiction;
         if (this.fictionById !== null) {
           this.isUpdate = true;
+          this.isAvatar = true;
           this.updateFormControls();
           this.comments = this.fictionById.comments || [];
           this.avatarUrl = this.fictionById.coverUrl || '';
@@ -140,33 +150,37 @@ export class AdminFictionDetailFeatureComponent {
   }
 
   updateFormControls() {
-    this.name.setValue(this.fictionById?.name);
-    this.status.setValue(this.fictionById?.status);
-    this.description.setValue(this.fictionById?.description);
-    this.countView.setValue(this.fictionById?.countView);
-    this.userId.setValue(this.fictionById?.user?.username);
-  }
-
-  createFiction() {
-    if (this.currentUser?.id) {
-      console.log('co id ma');
-      const newFiction: Fiction = {
-        name: this.name.value,
-        status: this.status.value,
-        description: this.description.value,
-        countView: 0,
-        userId: this.currentUser?.id,
-        coverUrl: this.fileName,
-        coverPublicId: this.avatarPublicId,
-      };
-      this.fictionService
-        .createFiction(newFiction)
-        .subscribe(() => this.location.back());
+    if (this.fictionById && this.fictionById?.user?.username) {
+      this.name.setValue(this.fictionById?.name);
+      this.status.setValue(this.fictionById?.status);
+      this.description.setValue(this.fictionById?.description);
+      this.countView.setValue(this.fictionById?.countView);
+      this.userId.setValue(this.fictionById?.user?.username);
     }
   }
 
+  createFiction() {
+    const newFiction: Fiction = {
+      name: this.name.value || '',
+      status: this.status.value || false,
+      description: this.description.value || '',
+      countView: 0,
+      userId: this.currentUser?.id || -1,
+      coverUrl: this.fileName,
+      coverPublicId: this.avatarPublicId,
+    };
+    this.fictionService
+      .createFiction(newFiction)
+      .subscribe(() => this.location.back());
+  }
+
   updateFiction() {
-    if (this.fictionById?.user?.id != null) {
+    if (
+      this.fictionById?.user?.id &&
+      this.name.value &&
+      this.status.value &&
+      this.description.value
+    ) {
       const updateFiction: Fiction = {
         id: this.fictionById?.id,
         name: this.name.value,
@@ -194,6 +208,7 @@ export class AdminFictionDetailFeatureComponent {
     const files = (event.target as HTMLInputElement).files;
     this.handleFiles(files);
     this.isUpdateFile = true;
+    this.isAvatar = true;
     this.selectedFile = event.target.files[0];
   }
 
@@ -238,7 +253,6 @@ export class AdminFictionDetailFeatureComponent {
 
   onTagSelectionChange(tag: Tag) {
     tag.selected = !tag.selected;
-    console.log(tag.selected);
     if (tag.selected) {
       this.createTagFiction(tag);
     } else {
@@ -325,8 +339,6 @@ export class AdminFictionDetailFeatureComponent {
     });
   }
 
-  onSubmitChapter() {}
-
   onSubmitFiction() {
     if (this.fictionById && this.isUpdateFile === false) {
       this.updateFiction();
@@ -349,6 +361,9 @@ export class AdminFictionDetailFeatureComponent {
           this.currentUser = user;
         });
       }
+    }
+    if (typeof sessionStorage !== 'undefined') {
+      this.userRole = sessionStorage.getItem('role');
     }
   }
 }

@@ -25,6 +25,7 @@ public class FictionServiceImplement implements FictionService {
     private final CommentService commentService;
     private final TagFictionService tagFictionService;
     private final TagService tagService;
+    private final ProcessService processService;
     private final FileUploadService fileUploadService;
     private final ModelMapper modelMapper;
 
@@ -35,6 +36,7 @@ public class FictionServiceImplement implements FictionService {
                                    CommentService commentService,
                                    TagFictionService tagFictionService,
                                    TagService tagService,
+                                   ProcessService processService,
                                    FileUploadService fileUploadService,
                                    ModelMapper modelMapper) {
         this.fictionRepository = fictionRepository;
@@ -43,6 +45,7 @@ public class FictionServiceImplement implements FictionService {
         this.commentService = commentService;
         this.tagFictionService = tagFictionService;
         this.tagService = tagService;
+        this.processService = processService;
         this.fileUploadService = fileUploadService;
         this.modelMapper = modelMapper;
     }
@@ -67,7 +70,7 @@ public class FictionServiceImplement implements FictionService {
             listFictionByTagId = findAll();
         } else {
             for (Long fictionId : listFictionIdByTagId) {
-                listFictionByTagId.add(findById(fictionId));
+                listFictionByTagId.add(findById(fictionId, -1));
             }
         }
 
@@ -82,11 +85,12 @@ public class FictionServiceImplement implements FictionService {
     }
 
     @Override
-    public FictionDetailDTO findById(long id) {
+    public FictionDetailDTO findById(long id, long currenUserId) {
         Optional<Fiction> fictionOptional = fictionRepository.findById(id);
         FictionDetailDTO fictionDetailDTO = modelMapper.map(fictionOptional, FictionDetailDTO.class);
 
         UserDTO userDTO = findUser(fictionDetailDTO.getUserId());
+        ProcessDTO processDTO = findProcess((int) id, (int) currenUserId);
 
         List<ChapterDTO> chapterDTOs = findAllChapterByFictionId(id);
         List<CommentDetailDTO> commentDetailDTOs = findAllCommentByFictionId(id);
@@ -96,6 +100,7 @@ public class FictionServiceImplement implements FictionService {
         fictionDetailDTO.setChapters(chapterDTOs);
         fictionDetailDTO.setComments(commentDetailDTOs);
         fictionDetailDTO.setTags(tagDTOs);
+        fictionDetailDTO.setProcess(processDTO);
 
         Fiction fiction = modelMapper.map(fictionOptional, Fiction.class);
         saveCountView(fiction);
@@ -189,6 +194,20 @@ public class FictionServiceImplement implements FictionService {
 
         return tagDTOS;
     }
+    public ProcessDTO findProcess(int fictionId, int userId) {
+        ProcessDTO processDTO = this.processService.getProcessByFictionIdAndUserId(fictionId, userId);
+        if (processDTO == null) {
+            ProcessDTO newProcess = new ProcessDTO();
+            newProcess.setId(null);
+            newProcess.setFictionId(fictionId);
+            newProcess.setUserId(userId);
+            newProcess.setChapterProcessId(1);
+            processDTO = this.processService.createOrUpdateProcess(newProcess);
+        }
+        System.out.println(processDTO);
+        return processDTO;
+    }
+
 
     public static String removeDiacritics(String input) {
         if (input == null) {

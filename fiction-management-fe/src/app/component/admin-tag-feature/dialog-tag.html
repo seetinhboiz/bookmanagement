@@ -10,6 +10,9 @@
         [formControl]="name"
         [matAutocomplete]="auto"
       />
+      @if (name.hasError('required')) {
+        <mat-error>Name is <strong>required</strong></mat-error>
+      }
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
         @for (option of filteredOptions | async; track option) {
         <mat-option [value]="option">{{option.name}}</mat-option>
@@ -21,5 +24,5 @@
 
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-button cdkFocusInitial (click)="onSubmit()">Save</button>
+  <button mat-button cdkFocusInitial (click)="onSubmit()" [disabled]="name.hasError('required')">Save</button>
 </mat-dialog-actions>
