@@ -26,6 +26,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.getUserByUsername();
     if (typeof sessionStorage !== 'undefined') {
       this.username = sessionStorage.getItem('username') || '';
       this.avatar = sessionStorage.getItem('avatar') || '';
@@ -53,10 +54,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   getUserByUsername() {
-    if (typeof localStorage !== 'undefined') {
-      const storedUsername = localStorage.getItem('username');
+    if (typeof sessionStorage !== 'undefined') {
+      const storedUsername = sessionStorage.getItem('username');
       if (storedUsername) {
         this.userService.getUserByUsername(storedUsername).subscribe((user) => {
+          console.log('this called')
           this.user = user;
           if (user?.id) {
             if (typeof sessionStorage !== 'undefined') {

@@ -26,6 +26,13 @@ export class AuthService {
           this.isUserLoggedIn = isLoggedIn;
           this.loginStatusChange.next(this.isUserLoggedIn);
 
+          if (typeof sessionStorage !== 'undefined') {
+            sessionStorage.setItem(
+              'isUserLoggedIn',
+              isLoggedIn ? 'true' : 'false'
+            );
+          }
+
           if (typeof localStorage !== 'undefined') {
             localStorage.setItem(
               'isUserLoggedIn',
@@ -33,6 +40,9 @@ export class AuthService {
             );
             if (isLoggedIn) {
               localStorage.setItem('username', userNameInput);
+            }
+            if (isLoggedIn) {
+              sessionStorage.setItem('username', userNameInput);
             }
           }
         })
@@ -51,9 +61,12 @@ export class AuthService {
 
   getUser(): Observable<string> {
     const headers = new HttpHeaders({
-      'Authorization': 'Basic ' + btoa('user:userPass')
+      Authorization: 'Basic ' + btoa('user:userPass'),
     });
 
-    return this.http.get(`http://localhost:8080/user`, { headers: headers, responseType: 'text' });
+    return this.http.get(`http://localhost:8080/user`, {
+      headers: headers,
+      responseType: 'text',
+    });
   }
 }

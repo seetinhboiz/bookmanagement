@@ -20,15 +20,17 @@ import { AuthService } from './service/auth.service';
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnDestroy {
-  isLogin: boolean = false;
+  isLogin: string | null = 'false';
   loginSubscription: Subscription = new Subscription();
 
   constructor(private authService: AuthService) {
-    this.isLogin = authService.isUserLoggedIn;
+    if (typeof sessionStorage !== 'undefined') {
+      this.isLogin = sessionStorage.getItem('isUserLoggedIn');
+    }
 
     this.loginSubscription = this.authService.loginStatusChange.subscribe(
       (isLoggedIn: boolean) => {
-        this.isLogin = isLoggedIn;
+        this.isLogin = isLoggedIn.toString();
       }
     );
   }
@@ -37,10 +39,13 @@ export class AppComponent implements OnDestroy {
     this.loginSubscription.unsubscribe();
   }
 
-  // @HostListener('window:beforeunload', ['$event'])
-  // onBeforeUnload() {
-  //   if (typeof localStorage !== 'undefined') {
-  //     localStorage.clear();
-  //   }
-  // }
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload() {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.clear();
+    }
+    // if (typeof sessionStorage !== 'undefined') {
+    //   sessionStorage.clear();
+    // }
+  }
 }

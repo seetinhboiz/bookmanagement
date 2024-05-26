@@ -8,8 +8,17 @@ export class ExpenseGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(): boolean {
-    if (typeof localStorage !== 'undefined') {
-      const isUserLoggedIn = localStorage.getItem('isUserLoggedIn');
+    // if (typeof localStorage !== 'undefined') {
+    //   const isUserLoggedIn = localStorage.getItem('isUserLoggedIn');
+    //   if (isUserLoggedIn === 'true') {
+    //     return true;
+    //   } else {
+    //     this.router.navigateByUrl('/login');
+    //     return false;
+    //   }
+    // }
+    if (typeof sessionStorage !== 'undefined') {
+      const isUserLoggedIn = sessionStorage.getItem('isUserLoggedIn');
       if (isUserLoggedIn === 'true') {
         return true;
       } else {

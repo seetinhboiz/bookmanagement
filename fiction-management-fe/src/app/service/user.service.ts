@@ -20,6 +20,7 @@ export class UserService {
   }
 
   getUserByUsername(username: string) {
+    console.log('this called')
     return this.http.get<User>(`${this.urlUser}/username/${username}`)
   }
 
