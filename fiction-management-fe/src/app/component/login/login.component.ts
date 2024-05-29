@@ -18,6 +18,9 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
 import { CommunicationService } from '../../service/communication.service';
 import { Observable, map, of } from 'rxjs';
+import { User } from '../../interface/user';
+import { UserService } from '../../service/user.service';
+import { UploadService } from '../../service/upload.service';
 
 @Component({
   selector: 'app-login',
@@ -38,6 +41,8 @@ export class LoginComponent {
   constructor(
     private communicationService: CommunicationService,
     private authService: AuthService,
+    private userService: UserService,
+    private uploadService: UploadService,
     private router: Router
   ) {}
 
@@ -61,6 +66,9 @@ export class LoginComponent {
   isAvatar: boolean = false;
   selectedFile: File | undefined;
   avatarUrl: string = '';
+
+  fileName: string | undefined = undefined;
+  avatarPublicId: string = '';
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
@@ -118,8 +126,30 @@ export class LoginComponent {
   }
 
   // Sign up
+  createUser() {
+    const newUser: User = {
+      username: this.signupForm.controls.newUsername.value || '',
+      password: this.signupForm.controls.newPassword.value || '',
+      avatarUrl: this.fileName || '',
+      role: 'user',
+      avatarPublicId: this.avatarPublicId || '',
+    };
+    if (newUser !== undefined) {
+      this.userService.createUser(newUser).subscribe();
+    }
+  }
+
   onSignup() {
-    if (1 === 1) {
+    if (this.selectedFile) {
+      this.uploadService
+        .uploadFile(this.selectedFile)
+        .subscribe((responseUpload: any) => {
+          this.fileName = responseUpload.url;
+          this.avatarPublicId = responseUpload.public_id;
+          this.createUser();
+        });
+    } else {
+      console.log('No file selected');
     }
   }
 
