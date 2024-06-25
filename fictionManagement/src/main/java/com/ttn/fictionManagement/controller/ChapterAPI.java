@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/chapters")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200/")
 public class ChapterAPI {
 
     private final ChapterService chapterService;

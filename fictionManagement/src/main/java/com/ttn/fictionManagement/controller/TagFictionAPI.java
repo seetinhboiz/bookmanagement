@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tagFicitons")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200/")
 public class TagFictionAPI {
 
     private final TagFictionService tagFictionService;

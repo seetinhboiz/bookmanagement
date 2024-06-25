@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/fictions")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200/")
 public class FictionAPI {
     private final FictionService fictionService;
     private final Logger logger = LoggerFactory.getLogger(FictionAPI.class);

@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tags")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200/")
 public class TagAPI {
     private final TagService tagService;
     private final Logger logger = LoggerFactory.getLogger(TagAPI.class);

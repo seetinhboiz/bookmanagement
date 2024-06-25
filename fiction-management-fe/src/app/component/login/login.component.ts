@@ -15,12 +15,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Router } from '@angular/router';
-import { AuthService } from '../../service/auth.service';
-import { CommunicationService } from '../../service/communication.service';
 import { Observable, map, of } from 'rxjs';
 import { User } from '../../interface/user';
-import { UserService } from '../../service/user.service';
+import { AuthService } from '../../service/auth.service';
+import { CommunicationService } from '../../service/communication.service';
 import { UploadService } from '../../service/upload.service';
+import { UserService } from '../../service/user.service';
 
 @Component({
   selector: 'app-login',

@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/comments")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200/")
 public class CommentAPI {
 
     private final CommentService commentService;
